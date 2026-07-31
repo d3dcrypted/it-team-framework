@@ -11,129 +11,129 @@ metadata:
     related_skills: [it-team-cloud, it-team-service-desk, it-team-budget]
 ---
 
-# Specialista Applicativi — Application Manager (it-team-applications)
+# Applications Specialist — Application Manager (it-team-applications)
 
 # Assessment Protocol
 
-## 1. Inventario Applicativo
-- **Nome e descrizione**: identificativo univoco, business owner, contesto ( produzione / pre-produzione / sviluppo ).
-- **Tipologia**: CRM, ERP, SaaS, custom application, integration layer, tooling interno.
-- **Stato**: in produzione, in manutenzione, deprecato, candidato alla rimozione.
-- **Mappa dei flussi**: principali use-case e processi di business supportati.
-- **Documentazione**: dove sono archiviati manuali, runbook, API docs, diagrammi di architettura.
+## 1. Application Inventory
+- **Name and description**: unique identifier, business owner, context ( production / pre-production / development ).
+- **Type**: CRM, ERP, SaaS, custom application, integration layer, internal tooling.
+- **Status**: in production, under maintenance, deprecated, candidate for removal.
+- **Flow map**: primary use cases and business processes supported.
+- **Documentation**: where manuals, runbooks, API docs, architecture diagrams are stored.
 
-## 2. Versioni
-- **Versione corrente**: numero di versione o tag (es. 2024.1.0).
-- **Storia delle versioni**: cronologia degli upgrade, release note per ogni major/minor.
-- **Ecosystem di componenti**: librerie, framework, container, database driver versions.
-- **Patti di versionamento**: semantic versioning, date based, internal numbering.
-- **Allineamento**: versioni critiche allineate su ambienti (dev / test / prod).
+## 2. Versions
+- **Current version**: version number or tag (e.g. 2024.1.0).
+- **Version history**: upgrade timeline, release notes for each major/minor.
+- **Component ecosystem**: libraries, frameworks, containers, database driver versions.
+- **Versioning policies**: semantic versioning, date-based, internal numbering.
+- **Alignment**: critical versions aligned across environments (dev / test / prod).
 
-## 3. Licenze
-- **Modello di licensing**: perpetual, subscription, consumptive, core-based, user-based.
-- **Entità licenziate**: numero di core, socket, utenti, dispositivi.
-- **Scadenze e rinnovi**: date di scadenza, reminder, processo di rinnovo / acquisto.
-- **Conformità**: controllo quote, audit periodici, report vendor.
-- **Gestione emergenze**: procedure per upgrade urgente o variazione di carico.
+## 3. Licenses
+- **Licensing model**: perpetual, subscription, consumptive, core-based, user-based.
+- **Licensed entities**: number of cores, sockets, users, devices.
+- **Expirations and renewals**: expiration dates, reminders, renewal / purchase process.
+- **Compliance**: quota checks, periodic audits, vendor reporting.
+- **Emergency handling**: procedures for urgent upgrades or load changes.
 
-## 4. Integrazioni
-- **Endpoint e contatti**: API URLs, webhook, SFTP, messaggistica ( Kafka / RabbitMQ ), service bus.
-- **Protocolli e formati**: REST / GraphQL / SOAP, JSON / XML / gRPC, payload size limits.
-- **Autenticazione e autorizzazione**: API keys, OAuth2 / OIDC, mTLS, certificati, segreti gestiti.
-- **SLA e QoS**: tempi di risposta, rate limits, retry policy, timeout, backoff.
-- **Error handling**: codici di errore, pattern di fallback, dead-letter queue, logging delle eccezioni.
-- **Monitoraggio integrato**: metriche di traffico, errori, latenze, dimensioni code.
+## 4. Integrations
+- **Endpoints and contacts**: API URLs, webhooks, SFTP, messaging ( Kafka / RabbitMQ ), service bus.
+- **Protocols and formats**: REST / GraphQL / SOAP, JSON / XML / gRPC, payload size limits.
+- **Authentication and authorization**: API keys, OAuth2 / OIDC, mTLS, certificates, managed secrets.
+- **SLA and QoS**: response times, rate limits, retry policy, timeout, backoff.
+- **Error handling**: error codes, fallback patterns, dead-letter queue, exception logging.
+- **Integrated monitoring**: traffic metrics, errors, latencies, queue sizes.
 
 ## 5. Vendor Health
-- **Stato del vendor**: financial health, roadmap, fusioni/acquisizioni, annunci strategici.
-- **Supporto e servizi**: disponibilità di TAM, tempi di risposta, SLA contrattuali.
-- **Comunità e ecosistema**: forums, eventi, partner network, certificazioni.
-- **Rischi**: dipendenza singola fonte, lock-in, interruzioni del servizio, policy di privacy.
-- **Piani di contingenza**: exit strategy, migrazione off vendor, dati escrow.
+- **Vendor status**: financial health, roadmap, mergers/acquisitions, strategic announcements.
+- **Support and services**: TAM availability, response times, contractual SLAs.
+- **Community and ecosystem**: forums, events, partner network, certifications.
+- **Risks**: single-source dependency, lock-in, service outages, privacy policies.
+- **Contingency plans**: exit strategy, off-vendor migration, data escrow.
 
 ## 6. Custom Code Quality
-- **Architettura**: clean architecture, separazione preoccupazioni, layers chiari (domain / application / infrastructure).
-- **Code quality**: linting, formattazione, analisi statica, cyclomatic complexity, code smells.
-- **Test**: coverage unit test, test di integrazione, test end-to-end, test di carico, strategy di test data.
-- **Build & CI/CD**: pipeline di release, automazione, gating, approvazioni, rollback.
+- **Architecture**: clean architecture, separation of concerns, clear layers (domain / application / infrastructure).
+- **Code quality**: linting, formatting, static analysis, cyclomatic complexity, code smells.
+- **Tests**: unit test coverage, integration tests, end-to-end tests, load tests, test data strategy.
+- **Build & CI/CD**: release pipelines, automation, gating, approvals, rollback.
 - **Security**: SAST / DAST, secret management, dependency scanning, threat modeling.
-- **Performance**: benchmark, profiling, carichi previsti, piano di scalabilità.
+- **Performance**: benchmarking, profiling, expected loads, scalability plan.
 
 ---
 
 # Improvement Catalog
 
 ## 1. Application Rationalization
-- **Elimina ridondanze**: applicazioni sovrapposte con funzionalità simili.
-- **Consolidamento**: migrazione di carichi di lavoro verso un'unica piattaforma.
-- **Decommissioning sicuro**: archiviazione dati, comunicazione agli utenti, procedura di cutover.
-- **KPI**: numero di applicazioni ridotto, percentuale di carico spostato, risparmio annuo.
+- **Eliminate redundancies**: overlapping applications with similar functionality.
+- **Consolidation**: migrate workloads to a single platform.
+- **Safe decommissioning**: data archival, user communication, cutover procedure.
+- **KPIs**: number of applications reduced, percentage of workload migrated, annual savings.
 
 ## 2. API-First Integration
-- **Design delle API**: contratto chiaro, versioning, documentazione OpenAPI/Swagger.
-- **Gateway API**: gestione rate limiting, autenticazione, monitoraggio, caching.
-- **Pattern di integrazione**: façade, anti-corruption layer, async messaging, event sourcing.
-- **Strumenti**: schema validation, contract testing, mock server per sviluppo.
+- **API design**: clear contract, versioning, OpenAPI/Swagger documentation.
+- **API gateway**: rate limiting, authentication, monitoring, caching management.
+- **Integration patterns**: façade, anti-corruption layer, async messaging, event sourcing.
+- **Tools**: schema validation, contract testing, mock server for development.
 
 ## 3. SaaS Consolidation
-- **Valutazione totale costo di proprietà**: license, custom development, supporto, training.
-- **User experience unification**: accesso SSO, esperienza utente coerente.
-- **Data residency and compliance**: verifica regioni, certificazioni (SOC 2, ISO 27001).
-- **Piano di migrazione**: dati, configurazioni, training, comunicazione.
+- **Total cost of ownership evaluation**: license, custom development, support, training.
+- **User experience unification**: SSO access, consistent user experience.
+- **Data residency and compliance**: region verification, certifications (SOC 2, ISO 27001).
+- **Migration plan**: data, configurations, training, communication.
 
 ## 4. Upgrade Planning
-- **Roadmap**: versioni target, milestone, rischi e dipendenze.
-- **Backwards compatibility**: valutare impatti su custom code e integrazioni.
-- **Esecuzione pilot**: gruppo pilota, rollback plan, checklist di go/no-go.
-- **Comunicazione**: agenda stakeholder, training, documentazione aggiornata.
+- **Roadmap**: target versions, milestones, risks and dependencies.
+- **Backwards compatibility**: evaluate impacts on custom code and integrations.
+- **Pilot execution**: pilot group, rollback plan, go/no-go checklist.
+- **Communication**: stakeholder agenda, training, updated documentation.
 
 ## 5. Microservices Assessment
-- **Dominio del modello**: bounded context, DDD, decomposizione per business capability.
-- **Granularità**: servizi piccoli e autonomi vs monolite frazionato.
-- **Data management**: database per servizio, eventuali pattern CQRS / Event Sourcing.
-- **OSS e tool**: orchestrator (Kubernetes), service mesh, gestione osservabilità.
+- **Domain model**: bounded context, DDD, decomposition by business capability.
+- **Granularity**: small, autonomous services vs. fractured monolith.
+- **Data management**: database per service, potential CQRS / Event Sourcing patterns.
+- **OSS and tooling**: orchestrator (Kubernetes), service mesh, observability management.
 
 ---
 
 # Implementation Guide
 
-## Fase 0 — Preparazione
-- **Stakeholder**: business owner, IT, security, compliance, finance.
-- **Obiettivi**: definire scope, success criteria, KPI, timeline.
-- **Strumenti**: inventario condiviso ( foglio / CMDB ), issue tracker, wiki documentazione.
+## Phase 0 — Preparation
+- **Stakeholders**: business owner, IT, security, compliance, finance.
+- **Objectives**: define scope, success criteria, KPIs, timeline.
+- **Tools**: shared inventory (spreadsheet / CMDB), issue tracker, documentation wiki.
 
-## Fase 1 — Discovery e Inventario
-- Eseguire interview con i principali utenti e owners.
-- Estrarre liste da CMDB, contratti di licenza, configurazioni CI/CD.
-- Validare lo stato attuale con i responsabili delle applicazioni.
+## Phase 1 — Discovery and Inventory
+- Conduct interviews with primary users and owners.
+- Extract lists from CMDB, license agreements, CI/CD configurations.
+- Validate current state with application owners.
 
-## Fase 2 — Valutazione e Prioritizzazione
-- Applicare un modello di scoring (ad es. costo + rischio + valore di business).
-- Classificare in: mantenere, ottimizzare, consolidare, sostituire, decommissionare.
-- Definire backlog delle migliorie con priorità chiare.
+## Phase 2 — Evaluation and Prioritization
+- Apply a scoring model (e.g., cost + risk + business value).
+- Classify as: keep, optimize, consolidate, replace, decommission.
+- Define improvement backlog with clear priorities.
 
-## Fase 3 — Progettazione del Miglioramento
-- Scegliere pattern di integrazione e target architecture.
-- Definire success metrics e criteri di accettazione.
-- Creare piani di dettaglio per ogni iniziativa (timeline, risorse, budget).
+## Phase 3 — Improvement Design
+- Choose integration patterns and target architecture.
+- Define success metrics and acceptance criteria.
+- Create detailed plans for each initiative (timeline, resources, budget).
 
-## Fase 4 — Esecuzione e Migrazione
-- Pilot su ambiente limitato, monitoraggio continuo.
-- Esecuzione del cutover con rollback ben definito.
-- Aggiornamento documentazione e formazione utenti.
+## Phase 4 — Execution and Migration
+- Pilot on a limited environment, continuous monitoring.
+- Execute cutover with well-defined rollback.
+- Update documentation and train users.
 
-## Fase 5 — Operazioni e Ottimizzazione Continua
-- Monitoring post-migrazione: SLA, errori, performance.
-- Revisione periodica del portfolio (ogni 6-12 mesi).
-- Iterare con miglioramenti incremental e technical debt riduzione.
+## Phase 5 — Operations and Continuous Optimization
+- Post-migration monitoring: SLA, errors, performance.
+- Periodic portfolio review (every 6-12 months).
+- Iterate with incremental improvements and technical debt reduction.
 
 ---
 
-# Note e Best Practices
-- Mantenere un singolo punto di verità per l'inventario (CMDB / cloud asset inventory).
-- Usare contratti API versionati e test di compatibilità.
-- Valutare sempre il rischio vendor e avere un piano di contingenza.
-- Promuovere cultura della qualità: code review, automated testing, CI/CD.
+# Notes and Best Practices
+- Maintain a single source of truth for the inventory (CMDB / cloud asset inventory).
+- Use versioned API contracts and compatibility tests.
+- Always evaluate vendor risk and have a contingency plan.
+- Promote a quality culture: code review, automated testing, CI/CD.
 ---
 
 ## Output Contract
@@ -166,4 +166,4 @@ All specialist assessments produce structured deliverables:
 - Comply with GDPR, HIPAA, SOX, and local regulations where applicable.
 - Data retention follows organization retention schedule; dispose per policy.
 
-- Coinvolgere gli utenti finali in ogni fase di cambio e validazione del successo.
+- Involve end users in every phase of change and success validation.

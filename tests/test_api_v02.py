@@ -21,7 +21,7 @@ def test_demo_lifecycle_and_gate_decisions(api):
     from fastapi.testclient import TestClient
 
     with TestClient(api.app) as client:
-        created = client.post("/engagements", json={"description": "Alfa Logistica Srl"})
+        created = client.post("/engagements", json={"description": "Acme Logistics Ltd"})
         assert created.status_code == 200
         engagement_id = created.json()["id"]
 

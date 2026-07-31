@@ -1,42 +1,42 @@
-# Use case v0.2 — Alfa Logistica Srl
+# Use Case v0.2 — Acme Logistics Ltd
 
-## Obiettivo
+## Objective
 
-Validare il workflow `Intake → Assessment → Gate Review → Roadmap` su una PMI logistica senza eseguire modifiche produttive.
+Validate the `Intake → Assessment → Gate Review → Roadmap` workflow on a logistics SME without making any production changes.
 
-## Contesto sintetico
+## Summary Context
 
-- 80 dipendenti, 65 utenti IT, 2 sedi
-- Operatività 24/7; downtime massimo: 2 ore
-- Budget iniziale massimo: 35.000 EUR
-- Active Directory on-premise e Microsoft 365
-- 4 VM VMware con Windows Server 2016/2019
-- ERP business-critical
-- Veeam su NAS; restore test completo non eseguito negli ultimi 12 mesi
-- Firewall Fortinet e VPN utenti remoti
-- Endpoint Windows e helpdesk via email
-- MFA non uniforme; nessun SIEM
+- 80 employees, 65 IT users, 2 locations
+- 24/7 operations; maximum downtime: 2 hours
+- Initial budget cap: EUR 35,000
+- On-premise Active Directory and Microsoft 365
+- 4 VMware VMs running Windows Server 2016/2019
+- Business-critical ERP
+- Veeam on NAS; no complete restore test performed in the last 12 months
+- Fortinet firewall and remote user VPN
+- Windows endpoints and helpdesk via email
+- Non-uniform MFA; no SIEM
 
-## Criteri di accettazione
+## Acceptance Criteria
 
-Il test è superato se il report contiene:
+The test is passed if the report contains:
 
-1. 9 domini specialistici;
-2. fatti confermati, assunzioni e dati mancanti separati;
-3. raccomandazioni con ID univoco;
-4. severity tra `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`;
-5. decisione individuale del gatekeeper;
-6. condizioni e rollback verificabili;
-7. roadmap entro 35.000 EUR;
-8. nessuna esecuzione senza approvazione esplicita.
+1. 9 specialist domains;
+2. confirmed facts, assumptions, and missing data clearly separated;
+3. recommendations with unique IDs;
+4. severity between `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`;
+5. individual gatekeeper decision;
+6. verifiable conditions and rollback steps;
+7. roadmap within EUR 35,000;
+8. no execution without explicit approval.
 
-## Prompt di test
+## Test Prompt
 
 ```text
-Carica skill it-team-orchestrator.
+Load skill it-team-orchestrator.
 
-Avvia un assessment per Alfa Logistica Srl usando il contesto documentato in questo file.
-Esegui intake, assessment dei 9 domini, gate review e roadmap a 90 giorni.
-Non eseguire modifiche. Se mancano dati, separa chiaramente fatti, assunzioni e unknowns.
-Restituisci output strutturati secondo il contratto v0.2.
+Start an assessment for Acme Logistics Ltd using the documented context in this file.
+Run intake, assessment of the 9 domains, gate review, and a 90-day roadmap.
+Do not make any changes. If data is missing, clearly separate facts, assumptions, and unknowns.
+Return structured output according to the v0.2 contract.
 ```

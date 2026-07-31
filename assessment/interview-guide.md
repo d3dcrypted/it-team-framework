@@ -12,245 +12,245 @@ metadata:
 
 # Assessment Interview Guide
 
-Guida completa per l'intervista iniziale di assessment IT. Da usare nella Fase 0 (Intake) con il referente aziendale (CTO, IT Manager, o imprenditore).
+Complete guide for the initial IT assessment interview. To be used in Phase 0 (Intake) with the company stakeholder (CTO, IT Manager, or business owner).
 
-## Come Usare
+## How to Use
 
-1. Parti dal profilo azienda (domande generali)
-2. Scendi dominio per dominio
-3. Segna cosa è presente, mancante, e cosa preoccupa
-4. Alla fine, chiedi i "dolori" — spesso svelano priorità non dette
+1. Start with the company profile (general questions)
+2. Go through each domain in order
+3. Note what is present, what is missing, and what is concerning
+4. At the end, ask about "pain points" — they often reveal unstated priorities
 
 ---
 
-## 1. Profilo Azienda
+## 1. Company Profile
 
 ```markdown
-Domande obbligatorie:
-- [ ] Ragione sociale / nome azienda
-- [ ] Settore merceologico
-- [ ] Numero dipendenti totali
-- [ ] Numero utenti IT (chi usa un PC/work device)
-- [ ] Numero sedi (e dove: Italia/estero?)
-- [ ] Fatturato annuo (opzionale, per contesto budget)
-- [ ] Anno di fondazione
-- [ ] Crescita prevista nei prossimi 12 mesi (organico, sedi)
-- [ ] Ci sono figure IT interne? Quante? Quali ruoli?
-- [ ] Ci sono consulenti/fornitori IT esterni?
+Required questions:
+- [ ] Legal name / company name
+- [ ] Industry / sector
+- [ ] Total number of employees
+- [ ] Number of IT users (anyone who uses a PC/work device)
+- [ ] Number of locations (and where: domestic/abroad?)
+- [ ] Annual revenue (optional, for budget context)
+- [ ] Year founded
+- [ ] Expected growth in the next 12 months (headcount, locations)
+- [ ] Are there in-house IT staff? How many? What roles?
+- [ ] Are there external IT consultants/vendors?
 ```
 
-## 2. OS & Infrastruttura Server
+## 2. OS & Server Infrastructure
 
 ```markdown
-Server fisici e virtuali:
-- [ ] Quanti server totali (fisici + virtuali)?
-- [ ] Che hypervisor? (VMware/Hyper-V/Proxmox/KVM/Nutanix)
-- [ ] Versioni hypervisor?
-- [ ] Windows Server: versioni in uso? (2008/2012/2016/2019/2022/2025)
-- [ ] Linux: distribuzioni? (Ubuntu/RHEL/Rocky/Debian)
-- [ ] Container? (Docker/K8s/Nomad)
-- [ ] Quanto uptime medio? Ci sono crash frequenti?
-- [ ] Patch management: automatizzato o manuale? (WSUS/SCCM/Automation)
-- [ ] Monitoring server? (Nagios/Zabbix/PRTG/Datadog/nessuno)
-- [ ] Disaster recovery per i server? (HA? Cluster? Replication?)
-- [ ] Storage: SAN/NAS/DAS? Marca? Capacità? Età?
+Physical and virtual servers:
+- [ ] Total number of servers (physical + virtual)?
+- [ ] What hypervisor? (VMware/Hyper-V/Proxmox/KVM/Nutanix)
+- [ ] Hypervisor versions?
+- [ ] Windows Server: versions in use? (2008/2012/2016/2019/2022/2025)
+- [ ] Linux: distributions? (Ubuntu/RHEL/Rocky/Debian)
+- [ ] Containers? (Docker/K8s/Nomad)
+- [ ] Average uptime? Frequent crashes?
+- [ ] Patch management: automated or manual? (WSUS/SCCM/Automation)
+- [ ] Server monitoring? (Nagios/Zabbix/PRTG/Datadog/none)
+- [ ] Disaster recovery for servers? (HA? Clusters? Replication?)
+- [ ] Storage: SAN/NAS/DAS? Brand? Capacity? Age?
 ```
 
-## 3. Identità e Accessi
+## 3. Identity & Access
 
 ```markdown
-Directory Services e Identity:
-- [ ] Active Directory on-prem? Versione? (2008/2012/2016/2019/2022)
-- [ ] Azure AD / Entra ID? Sync in corso? (Azure AD Connect?)
-- [ ] Altri IdP? (Okta/Keycloak/LDAP)
-- [ ] MFA attivo? Su quali servizi? (admin? utenti? VPN?)
-- [ ] SSO implementato? Su cosa?
-- [ ] Policy password: complessità? Rotation? Lockout?
-- [ ] Account amministratori: separati dagli user day-to-day?
-- [ ] Onboarding/offboarding: processo documentato?
-- [ ] Audit log degli accessi? Retention?
+Directory Services and Identity:
+- [ ] On-prem Active Directory? Version? (2008/2012/2016/2019/2022)
+- [ ] Azure AD / Entra ID? Sync in progress? (Azure AD Connect?)
+- [ ] Other IdPs? (Okta/Keycloak/LDAP)
+- [ ] MFA active? On which services? (admin? users? VPN?)
+- [ ] SSO implemented? On what?
+- [ ] Password policy: complexity? Rotation? Lockout?
+- [ ] Admin accounts: separated from day-to-day user accounts?
+- [ ] Onboarding/offboarding: documented process?
+- [ ] Access audit logs? Retention?
 ```
 
 ## 4. Cloud
 
 ```markdown
-Cloud pubblico e ibrido:
-- [ ] Provider cloud? (Azure/AWS/GCP/nessuno)
-- [ ] Cosa gira in cloud? (VM? DB? App? Storage?)
-- [ ] Architettura: IaaS/PaaS/SaaS?
-- [ ] Hybrid cloud? Connessione on-prem-cloud?
-- [ ] Costo cloud mensile? Trend in crescita?
+Public and hybrid cloud:
+- [ ] Cloud provider? (Azure/AWS/GCP/none)
+- [ ] What runs in the cloud? (VMs? DBs? Apps? Storage?)
+- [ ] Architecture: IaaS/PaaS/SaaS?
+- [ ] Hybrid cloud? On-prem to cloud connection?
+- [ ] Monthly cloud cost? Growing trend?
 - [ ] Reserved instances / savings plans?
 - [ ] Tagging strategy?
-- [ ] Governance: policy, RBAC, blueprints?
-- [ ] Backup in cloud? Region replication?
+- [ ] Governance: policies, RBAC, blueprints?
+- [ ] Cloud backup? Region replication?
 - [ ] Security posture: NSG, WAF, Sentinel?
-- [ ] Landing zone: strutturata o resource group a caso?
+- [ ] Landing zone: structured or random resource groups?
 ```
 
-## 5. Applicativi
+## 5. Applications
 
 ```markdown
 Enterprise applications:
 - [ ] ERP? (SAP/Oracle/Dynamics/Zucchetti/Odoo)
 - [ ] CRM? (Salesforce/Dynamics/HubSpot)
-- [ ] Email/Collab: (Office 365/Google Workspace/on-prem)
+- [ ] Email/Collaboration: (Office 365/Google Workspace/on-prem)
 - [ ] HR/Payroll: (Zucchetti/TeamSystem/ADP)
-- [ ] Altri applicativi business-critical?
-- [ ] Custom applications? Tecnologia? (.NET/PHP/Python/Java)
-- [ ] Integrazioni tra applicativi? (API/ETL/middleware)
-- [ ] Application lifecycle: chi mantiene? CI/CD?
-- [ ] Licenze applicative: perpetue/subscription? Renewal date?
+- [ ] Other business-critical applications?
+- [ ] Custom applications? Technology? (.NET/PHP/Python/Java)
+- [ ] Application integrations? (API/ETL/middleware)
+- [ ] Application lifecycle: who maintains it? CI/CD?
+- [ ] Software licenses: perpetual/subscription? Renewal date?
 - [ ] Vendor health: support still active? End of life?
-- [ ] Test environment? Dev/staging/prod separati?
+- [ ] Test environment? Separate dev/staging/prod?
 ```
 
-## 6. Sicurezza
+## 6. Security
 
 ```markdown
 Cybersecurity posture:
 - [ ] Antivirus/EDR? (Kaspersky/Sophos/Defender/CrowdStrike/SentinelOne)
-- [ ] Firewall: marca? Modello? (Fortinet/PaloAlto/Sophos/CheckPoint)
+- [ ] Firewall: brand? Model? (Fortinet/PaloAlto/Sophos/CheckPoint)
 - [ ] VPN solution? (WireGuard/OpenVPN/FortiClient/AnyConnect)
-- [ ] SIEM? (Splunk/QRadar/Sentinel/Wazuh/nessuno)
-- [ ] Vulnerability management? (Tenable/Qualys/Nessus/nessuno)
-- [ ] Incident response plan documentato?
-- [ ] Backup: encrypted? Offline? 3-2-1?
-- [ ] MFA: dove è attivo?
-- [ ] GDPR compliance: DPO? ROPA? Data breach procedure?
-- [ ] ISO 27001 / SOC2 / altra certificazione?
-- [ ] Security awareness training per utenti?
+- [ ] SIEM? (Splunk/QRadar/Sentinel/Wazuh/none)
+- [ ] Vulnerability management? (Tenable/Qualys/Nessus/none)
+- [ ] Documented incident response plan?
+- [ ] Backups: encrypted? Offline? 3-2-1?
+- [ ] MFA: where is it active?
+- [ ] GDPR compliance: DPO? ROPA? Data breach procedures?
+- [ ] ISO 27001 / SOC2 / other certification?
+- [ ] Security awareness training for users?
 - [ ] Phishing simulation?
-- [ ] Penetration test: ultimo? Frequenza?
-- [ ] Cyber insurance? Requisiti?
+- [ ] Penetration test: last one? Frequency?
+- [ ] Cyber insurance? Requirements?
 ```
 
-## 7. Rete
+## 7. Network
 
 ```markdown
 Network infrastructure:
-- [ ] LAN: switch marca/modello? (Cisco/HPE/Aruba/MikroTik/Ubiquiti)
+- [ ] LAN: switch brand/model? (Cisco/HPE/Aruba/MikroTik/Ubiquiti)
 - [ ] WiFi: (Aruba/Ubiquiti/Meraki/Ruckus)
-- [ ] VLAN segmentazione?
-- [ ] Firewall: perimetrale? Internal segmentation?
+- [ ] VLAN segmentation?
+- [ ] Firewall: perimeter? Internal segmentation?
 - [ ] VPN: site-to-site? Remote access?
 - [ ] SD-WAN? Provider?
-- [ ] ISP: principale + backup? Banda?
+- [ ] ISP: primary + backup? Bandwidth?
 - [ ] DNS: internal resolver? External?
-- [ ] DHCP: da AD? Da firewall?
+- [ ] DHCP: from AD? From firewall?
 - [ ] Network monitoring? (PRTG/LibreNMS/Zabbix/SolarWinds)
-- [ ] QoS gestito?
+- [ ] QoS managed?
 - [ ] Load balancer? (HAProxy/F5/NGINX)
-- [ ] Cablaggio: categoria? Età? Documentato?
+- [ ] Cabling: category? Age? Documented?
 ```
 
-## 8. Backup e Disaster Recovery
+## 8. Backup & Disaster Recovery
 
 ```markdown
 Data protection:
 - [ ] Backup software? (Veeam/CommVault/NAKIVO/UrBackup)
-- [ ] Storage backup: NAS? Tape? Cloud? (Wasabi/Backblaze/Azure)
-- [ ] 3-2-1 rule rispettata? (3 copie, 2 media, 1 off-site)
-- [ ] RTO obiettivo? RPO obiettivo?
-- [ ] Backup crittografati? Testati?
-- [ ] Ultimo test di restore con successo?
-- [ ] Disaster recovery plan documentato?
-- [ ] Sito DR? (caldo/freddo/cloud)
-- [ ] DR test: frequenza? Ultimo test?
-- [ ] Backup dei backup? (replication to second site)
-- [ ] Retention policy documentata?
-- [ ] Backup delle VM? Database? Fileshare? 365/Google Workspace?
+- [ ] Backup storage: NAS? Tape? Cloud? (Wasabi/Backblaze/Azure)
+- [ ] 3-2-1 rule followed? (3 copies, 2 media types, 1 off-site)
+- [ ] Target RTO? Target RPO?
+- [ ] Encrypted backups? Tested?
+- [ ] Last successful restore test?
+- [ ] Documented disaster recovery plan?
+- [ ] DR site? (hot/warm/cold/cloud)
+- [ ] DR testing: frequency? Last test?
+- [ ] Backup of backups? (replication to secondary site)
+- [ ] Documented retention policy?
+- [ ] VM backups? Database backups? Fileshare? Microsoft 365/Google Workspace?
 ```
 
-## 9. Endpoint
+## 9. Endpoints
 
 ```markdown
-Workstation e dispositivi:
-- [ ] Quanti PC/workstation? (Windows/macOS/Linux)
-- [ ] SOE standard? Immagine unificata?
+Workstations and devices:
+- [ ] Number of PCs/workstations? (Windows/macOS/Linux)
+- [ ] Standard SOE? Unified image?
 - [ ] Intune / MDM? (Intune/JAMF/Workspace ONE/MobileIron)
-- [ ] Patch client: automatico o manuale?
-- [ ] Antivirus su endpoint?
-- [ ] Mobile devices: quanti? iOS/Android? MDM?
+- [ ] Client patching: automatic or manual?
+- [ ] Antivirus on endpoints?
+- [ ] Mobile devices: how many? iOS/Android? MDM?
 - [ ] BYOD policy?
-- [ ] Printer fleet: quante? Marca? Gestite?
-- [ ] Hardware lifecycle: refresh ogni quanti anni?
-- [ ] Procurement PC: standardizzato? Fornitore?
+- [ ] Printer fleet: how many? Brand? Managed?
+- [ ] Hardware lifecycle: refresh every how many years?
+- [ ] PC procurement: standardized? Vendor?
 - [ ] Virtual Desktop? (AVD/Citrix/VMware Horizon)
 - [ ] BitLocker/FileVault? Disk encryption?
-- [ ] Policy di utilizzo accettabile?
+- [ ] Acceptable use policy?
 ```
 
 ## 10. Service Desk & IT Service Management
 
 ```markdown
 IT service delivery:
-- [ ] Ticketing system? (ServiceNow/Jira/Zendesk/Freshservice/nessuno)
-- [ ] SLA? (tempo primo response? resolution?)
-- [ ] Quanti ticket/mese?
-- [ ] Incident / Problem / Change management separati?
-- [ ] Knowledge base? Quanti articoli?
+- [ ] Ticketing system? (ServiceNow/Jira/Zendesk/Freshservice/none)
+- [ ] SLAs? (first response time? resolution time?)
+- [ ] Number of tickets per month?
+- [ ] Separate Incident / Problem / Change management?
+- [ ] Knowledge base? How many articles?
 - [ ] Self-service portal?
-- [ ] Asset management integrato?
+- [ ] Integrated asset management?
 - [ ] Onboarding/offboarding: ticket + automation?
-- [ ] CSAT (customer satisfaction) misurato?
+- [ ] CSAT (customer satisfaction) measured?
 - [ ] ITIL processes: Incident/Problem/Change/Release/Asset?
 - [ ] Change Advisory Board (CAB)?
 - [ ] CMDB? (Configuration Management DB)
 ```
 
-## 11. Budget e Procurement
+## 11. Budget & Procurement
 
 ```markdown
 IT financial management:
-- [ ] Budget IT annuo? (totale e per categoria)
+- [ ] Annual IT budget? (total and by category)
 - [ ] CAPEX vs OPEX ratio?
 - [ ] Licensing: Microsoft (EA/CSP/Open)? Adobe? Oracle? VMware?
 - [ ] Software Asset Management (SAM)?
-- [ ] Vendor principali? (Microsoft/Fastweb/TIM/Vodafone/Aruba)
+- [ ] Main vendors? (Microsoft/Fastweb/TIM/Vodafone/Aruba)
 - [ ] Contract renewal calendar?
-- [ ] Procurement process: approvazioni? PO?
-- [ ] Shadow IT: SaaS acquistati senza IT?
-- [ ] IT chargeback/showback ai dipartimenti?
+- [ ] Procurement process: approvals? POs?
+- [ ] Shadow IT: SaaS purchased without IT involvement?
+- [ ] IT chargeback/showback to departments?
 ```
 
-## 12. Domande Finali
+## 12. Closing Questions
 
 ```markdown
-Sempre chiudere con:
-- [ ] Quali sono i 3 problemi IT più urgenti?
-- [ ] Se potessi cambiare una cosa sola, quale sarebbe?
-- [ ] C'è un progetto IT bloccato da mesi/anni?
-- [ ] Quanto tempo impiega in media un nuovo assunto ad avere tutto funzionante?
-- [ ] L'ultimo incidente grave: cosa è successo? Quanto ha impattato?
-- [ ] C'è qualcosa che NON ti ho chiesto che dovrei sapere?
+Always close with:
+- [ ] What are the 3 most urgent IT problems?
+- [ ] If you could change one thing, what would it be?
+- [ ] Is there an IT project stuck for months/years?
+- [ ] On average, how long does it take for a new hire to get everything working?
+- [ ] The last major incident: what happened? How much did it impact the business?
+- [ ] Is there something I did NOT ask that I should know?
 ```
 
-## Scoring per Dominio
+## Scoring per Domain
 
-Dopo l'intervista, assegna un punteggio di maturità per ogni dominio:
+After the interview, assign a maturity score for each domain:
 
-| Punteggio | Descrizione |
-|-----------|-------------|
-| **0-3** | Reattivo — assente o funziona per caso. Nessun processo, nessuna documentazione |
-| **4-5** | Base — processi informali, documentazione minima, backup non testati |
-| **6-7** | Definito — processi documentati, monitoring base, backup testati periodicamente |
-| **8-9** | Gestito — KPI misurati, automazione, miglioramento continuo, metriche |
-| **10** | Ottimizzato — AI/automation, self-healing, predictive, continuous improvement |
+| Score | Description |
+|-------|-------------|
+| **0–3** | Reactive — absent or working by chance. No processes, no documentation |
+| **4–5** | Basic — informal processes, minimal documentation, untested backups |
+| **6–7** | Defined — documented processes, basic monitoring, periodically tested backups |
+| **8–9** | Managed — measured KPIs, automation, continuous improvement, metrics |
+| **10** | Optimized — AI/automation, self-healing, predictive, continuous improvement |
 
-Template punteggio:
+Scoring template:
 
 ```markdown
-| Dominio | Punteggio | Note |
-|---------|-----------|------|
-| OS & Infra | /10 | |
-| Cloud | /10 | |
-| App | /10 | |
-| Security | /10 | |
-| Network | /10 | |
-| Data/Backup | /10 | |
-| Endpoint | /10 | |
-| Service Desk | /10 | |
-| Budget | /10 | |
-| **Media** | **/10** | |
+| Domain        | Score | Notes |
+|---------------|-------|-------|
+| OS & Infra    | /10   |       |
+| Cloud         | /10   |       |
+| Applications  | /10   |       |
+| Security      | /10   |       |
+| Network       | /10   |       |
+| Data/Backup   | /10   |       |
+| Endpoints     | /10   |       |
+| Service Desk  | /10   |       |
+| Budget        | /10   |       |
+| **Average**   | **/10** |     |
 ```

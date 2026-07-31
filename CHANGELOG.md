@@ -10,27 +10,27 @@
 
 - Updated API security guidance for production mode and marked model records as demonstration seeds.
 
-Tutte le modifiche rilevanti del progetto sono registrate in questo file.
+All significant project changes are recorded in this file.
 
 ## [0.2.0] - 2026-07-31
 
 ### Added
 
-- Versione del progetto in `VERSION`.
-- Contratto comune di output per assessment e raccomandazioni.
-- Severity canoniche: `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`.
-- Frontmatter Hermes uniformato per gli skill.
-- Repository Git inizializzato per consentire diff, branch e tag.
+- Project version in `VERSION`.
+- Common output contract for assessments and recommendations.
+- Canonical severities: `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`.
+- Unified Hermes frontmatter for skills.
+- Git repository initialized to enable diffs, branches, and tags.
 
 ### Changed
 
-- Standardizzato il riferimento ai domini Identity & Access e Data, Backup & DR.
-- Aggiunta la regola di re-gate quando un’azione cambia durante l’execution.
+- Standardized references to the Identity & Access and Data, Backup & DR domains.
+- Added the re-gate rule when an action changes during execution.
 
 ### API and validation
 
-- API demo resa deterministica con macchina a stati, decisioni gatekeeper a quattro esiti, idempotenza e gestione coerente degli errori.
-- Aggiunti test automatici del lifecycle API e use case Alfa Logistica.
-- Integrazione reale con Hermes ancora da implementare; la modalità demo resta esplicita.
+- Demo API made deterministic with a state machine, four-outcome gatekeeper decisions, idempotency, and consistent error handling.
+- Added automated API lifecycle tests and the Acme Logistics example use case.
+- Real Hermes integration still to be implemented; demo mode remains explicit.
 
 [0.2.0]: https://semver.org/

@@ -11,7 +11,7 @@ metadata:
     related_skills: [it-team-cloud, it-team-security, it-team-os-infra]
 ---
 
-# Dati & Backup Specialist (it-team-data)
+# Data & Backup Specialist (it-team-data)
 
 ## Overview
 Specialist agent for data infrastructure assessment and improvement, covering storage systems (SAN/NAS/Object), backup strategies, disaster recovery, business continuity, data governance, and analytics/data warehouse pipelines.

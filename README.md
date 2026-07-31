@@ -1,71 +1,71 @@
 # IT Team Framework
 
-Framework multi-agente per reparti IT aziendali. Un team IT completo come set di agenti AI specializzati, orchestrati da un CTO/IT Manager artificiale.
+Multi-agent framework for corporate IT departments. A complete IT team as a set of specialized AI agents, orchestrated by an artificial CTO/IT Manager.
 
-## Filosofia
+## Philosophy
 
-Un reparto IT non è solo competenze tecniche — è assessment, pianificazione, esecuzione e miglioramento continuo. Questo framework traduce ogni ruolo IT in un agente Hermes skillato, capace di:
+An IT department is not just technical skills — it is assessment, planning, execution, and continuous improvement. This framework translates each IT role into a skilled Hermes agent, capable of:
 
-1. **Valutare** lo stato corrente (assessment)
-2. **Pianificare** miglioramenti (gap analysis + roadmap)
-3. **Eseguire** le modifiche (implementation playbook)
-4. **Monitorare** i risultati (KPI e report)
+1. **Assessing** the current state (assessment)
+2. **Planning** improvements (gap analysis + roadmap)
+3. **Executing** changes (implementation playbook)
+4. **Monitoring** results (KPIs and reports)
 
-## Architettura
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────┐
 │              ORCHESTRATOR (CTO/CISO)             │
-│  - Intake aziendale                              │
-│  - Coordinamento assessment parallelo            │
-│  - Security Gate Review (approva/nega)           │
-│  - Sintesi gap analysis                          │
-│  - Roadmap prioritaria                           │
-│  - Assegnazione esecuzione                       │
+│  - Company intake                                │
+│  - Parallel assessment coordination              │
+│  - Security Gate Review (approve/deny)           │
+│  - Gap analysis synthesis                        │
+│  - Prioritized roadmap                           │
+│  - Execution assignment                          │
 └──────┬──────────────┬──────────────┬─────────────┘
        │              │              │
   ┌────▼──┐     ┌─────▼─────┐    ┌──▼──────┐
-  │OS/Infra│     │ Security  │    │  Cloud  │  ... 9 specialisti
+  │OS/Infra│     │ Security  │    │  Cloud  │  ... 9 specialists
   │Agent   │     │Gatekeeper │    │  Agent  │
-  └────────┘     │(approva/  │    └─────────┘
-                 │ nega rec) │
+  └────────┘     │(approve/  │    └─────────┘
+                 │ deny rec) │
                  └───────────┘
 ```
 
-## Struttura
+## Structure
 
 ```
 it-team-framework/
 ├── README.md
 ├── orchestrator/
-│   └── SKILL.md              # Agente CTO/IT Manager
+│   └── SKILL.md              # CTO/IT Manager agent
 ├── specialists/
-│   ├── os-infra/SKILL.md     # Sistemi operativi, server, virtualizzazione
+│   ├── os-infra/SKILL.md     # Operating systems, servers, virtualization
 │   ├── cloud/SKILL.md        # Cloud IaaS/PaaS/SaaS
-│   ├── applications/SKILL.md # Applicativi enterprise, CRM, ERP
-│   ├── security/SKILL.md     # Sicurezza, compliance, monitoring
-│   ├── network/SKILL.md      # Rete LAN/WAN/VPN/firewall
+│   ├── applications/SKILL.md # Enterprise applications, CRM, ERP
+│   ├── security/SKILL.md     # Security, compliance, monitoring
+│   ├── network/SKILL.md      # LAN/WAN/VPN/firewall network
 │   ├── data/SKILL.md         # Storage, backup, DR, analytics
 │   ├── budget/SKILL.md       # Budget, licensing, vendor, procurement
-│   ├── endpoints/SKILL.md    # Workstation, mobile, MDM, stampanti
-│   └── service-desk/SKILL.md # Helpdesk, ticketing, training utenti
+│   ├── endpoints/SKILL.md    # Workstations, mobile, MDM, printers
+│   └── service-desk/SKILL.md # Helpdesk, ticketing, user training
 ├── gatekeeper/
-│   └── SKILL.md              # Security Gatekeeper (review/approva/nega)
+│   └── SKILL.md              # Security Gatekeeper (review/approve/deny)
 ├── api/
-│   ├── server.py             # FastAPI server per gestione remota
-│   └── it-team-api.service   # Systemd unit per demone
+│   ├── server.py             # FastAPI server for remote management
+│   └── it-team-api.service   # Systemd unit for daemon
 ├── assessment/
-│   └── interview-guide.md    # Guida intervista per assessment iniziale
+│   └── interview-guide.md    # Interview guide for initial assessment
 ├── docs/
-│   └── model-budget-analysis.md # Analisi modelli AI per budget
+│   └── model-budget-analysis.md # AI model budget analysis
 └── scripts/
-    ├── deploy-skills.sh      # Installa tutti gli skill in Hermes
-    └── new-engagement.sh     # Avvia un nuovo engagement
+    ├── deploy-skills.sh      # Install all skills in Hermes
+    └── new-engagement.sh     # Start a new engagement
 ```
 
-## Come si usa
+## How to Use
 
-### 1. Installazione
+### 1. Installation
 
 ```bash
 cd ~/it-team-framework
@@ -73,102 +73,102 @@ chmod +x scripts/*.sh
 ./scripts/deploy-skills.sh
 ```
 
-### 2. Nuovo Engagement
+### 2. New Engagement
 
 ```bash
 hermes chat
-# Carica lo skill orchestrator: /skill it-team-orchestrator
-# Oppure usa lo script:
-./scripts/new-engagement.sh "Azienda Srl" --size 50 --sector manufacturing
+# Load the orchestrator skill: /skill it-team-orchestrator
+# Or use the script:
+./scripts/new-engagement.sh "Acme Corp" --size 50 --sector manufacturing
 ```
 
-### 3. Flusso di Lavoro
+### 3. Workflow
 
-L'orchestrator segue queste fasi:
+The orchestrator follows these phases:
 
-| Fase | Azione | Agenti Coinvolti |
-|------|--------|------------------|
-| **Intake** | Raccolta dati aziendali (dipendenti, settore, stack IT) | Orchestrator |
-| **Assessment** | Analisi stato corrente per ogni dominio | Tutti (parallelo) |
-| **Gate Review** | Security gatekeeper approva/nega ogni raccomandazione | Security Gatekeeper |
-| **GAP Analysis** | Confronto AS-IS vs BEST PRACTICES (solo rec approvate) | Orchestrator |
-| **Roadmap** | Piano priorizzato con tempi e costi | Orchestrator |
-| **Execution** | Implementazione miglioramenti | Specialisti assegnati |
-| **Review** | Verifica KPI e report finale | Orchestrator |
+| Phase | Action | Agents Involved |
+|-------|--------|-----------------|
+| **Intake** | Collect company data (employees, sector, IT stack) | Orchestrator |
+| **Assessment** | Analyze current state for each domain | All (parallel) |
+| **Gate Review** | Security gatekeeper approves/denies each recommendation | Security Gatekeeper |
+| **GAP Analysis** | Compare AS-IS vs BEST PRACTICES (only approved recommendations) | Orchestrator |
+| **Roadmap** | Prioritized plan with timelines and costs | Orchestrator |
+| **Execution** | Implement improvements | Assigned specialists |
+| **Review** | Verify KPIs and final report | Orchestrator |
 
 ### 4. Privacy
 
-**Attenzione**: i dati inseriti nei prompt (intake, assessment) transitano via OpenRouter verso i provider dei modelli. Il framework mitiga così:
-- Non inserire mai password, secret o dati personali nei prompt (vedi Common Pitfalls dell'orchestrator)
-- Assessment template locali (nessun upload di file esterni)
-- Report generati e salvati localmente
-- Per data-residency UE o privacy totale, usa modelli locali (vedi `docs/model-budget-analysis.md`)
+**Warning**: data entered in prompts (intake, assessment) is transmitted via OpenRouter to model providers. The framework mitigates this as follows:
+- Never enter passwords, secrets, or personal data in prompts (see the orchestrator's Common Pitfalls)
+- Local assessment templates (no external file uploads)
+- Reports generated and saved locally
+- For EU data residency or full privacy, use local models (see `docs/model-budget-analysis.md`)
 
-## Ruoli del Team IT
+## IT Team Roles
 
-| Ruolo | Agente | Competenze Chiave |
-|-------|--------|-------------------|
-| **CTO/IT Manager** | Orchestrator | Strategia, coordinamento, prioritizzazione |
-| **CISO/IT Auditor** | Security Gatekeeper | Gate review trasversale: approva/nega ogni raccomandazione |
-| **Sysadmin Senior** | OS & Infra | Server, AD, patch, virtualization |
+| Role | Agent | Key Competencies |
+|------|-------|------------------|
+| **CTO/IT Manager** | Orchestrator | Strategy, coordination, prioritization |
+| **CISO/IT Auditor** | Security Gatekeeper | Cross-cutting gate review: approves/denies each recommendation |
+| **Senior Sysadmin** | OS & Infra | Servers, AD, patching, virtualization |
 | **Cloud Architect** | Cloud | IaaS/PaaS, migration, FinOps |
 | **Application Manager** | Applications | CRM, ERP, integrations, lifecycle |
-| **Security Engineer** | Security | Assessment sicurezza, SIEM, incident response, GDPR |
+| **Security Engineer** | Security | Security assessment, SIEM, incident response, GDPR |
 | **Network Engineer** | Network | LAN/WAN, firewall, VPN, SD-WAN |
 | **Storage & DR Admin** | Data | Backup, disaster recovery, analytics |
 | **IT Procurement** | Budget & Procurement | Vendor management, licensing, CAPEX/OPEX |
-| **Endpoint Engineer** | Endpoints | MDM, SOE, mobile, patch client |
+| **Endpoint Engineer** | Endpoints | MDM, SOE, mobile, client patching |
 | **IT Support Lead** | Service Desk | Ticketing, SLA, knowledge base, training |
 
-## Esempio di Engagement
+## Engagement Example
 
 ```bash
-# 1. Carica orchestrator
-hermes chat -q "Carica skill it-team-orchestrator. Nuovo engagement per azienda di 100 dipendenti, settore logistica, stack IT: AD on-prem, Office 365, 3 server VMware, backup NAS, firewall Fortinet."
+# 1. Load orchestrator
+hermes chat -q "Load skill it-team-orchestrator. New engagement for a 100-employee company in logistics, IT stack: on-prem AD, Office 365, 3 VMware servers, NAS backup, Fortinet firewall."
 
-# 2. L'orchestrator farà:
-#    - Assessment parallelo di tutti i domini
-#    - Report gap analysis
-#    - Roadmap 6-12 mesi
-#    - Budget stimato per migliorie
+# 2. The orchestrator will:
+#    - Parallel assessment of all domains
+#    - Gap analysis report
+#    - 6-12 month roadmap
+#    - Estimated budget for improvements
 
-# 3. Approvata la roadmap, esegue:
-hermes chat -q "Esegui fase 1 della roadmap: aggiornamento AD a Azure AD Connect e backup automation"
+# 3. Once the roadmap is approved, execute:
+hermes chat -q "Execute phase 1 of the roadmap: upgrade AD to Azure AD Connect and backup automation"
 ```
 
-## API di Gestione (opzionale)
+## Management API (Optional)
 
-`api/server.py` espone una API FastAPI per tracciare engagement, raccomandazioni, gate review e roadmap (SQLite locale).
+`api/server.py` exposes a FastAPI API for tracking engagements, recommendations, gate reviews, and roadmaps (local SQLite).
 
 ```bash
 pip install fastapi uvicorn
-uvicorn server:app --host 127.0.0.1 --port 8080   # da api/
-# oppure come demone: cp api/it-team-api.service /etc/systemd/system/ && systemctl enable --now it-team-api
+uvicorn server:app --host 127.0.0.1 --port 8080   # from api/
+# or as a daemon: cp api/it-team-api.service /etc/systemd/system/ && systemctl enable --now it-team-api
 ```
 
-Endpoint principali: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/execute`, `GET /health`.
+Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/execute`, `GET /health`.
 
-L'API richiede `IT_TEAM_API_KEY` quando `IT_TEAM_MODE=production`; in modalità `demo` è pensata solo per uso locale. Non esporre l'API direttamente su Internet: usare un reverse proxy TLS, autenticazione e rete privata. I modelli presenti nel database iniziale sono seed dimostrativi e vanno sostituiti o aggiornati in base al provider scelto.
+The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`; in `demo` mode it is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
 
 ## Versioning
 
-Il progetto segue Semantic Versioning (`MAJOR.MINOR.PATCH`). La versione corrente è in `VERSION`.
+The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`). The current version is in `VERSION`.
 
 ```bash
-# Verifica versione
+# Check version
 cat VERSION
 
-# Crea un tag di release dopo le verifiche
+# Create a release tag after verification
 git add .
 git commit -m "release: v$(tr -d "\n" < VERSION)"
 git tag -a "v$(tr -d "\n" < VERSION)" -m "IT Team Framework v$(tr -d "\n" < VERSION)"
 ```
 
-Le modifiche devono essere registrate in `CHANGELOG.md`. Non committare database, secret, ambienti virtuali o report temporanei.
+Changes must be recorded in `CHANGELOG.md`. Do not commit databases, secrets, virtual environments, or temporary reports.
 
-## Requisiti
+## Requirements
 
 - Hermes Agent v0.19+
-- Modello orchestratore: deepseek/deepseek-v4-flash o superiore
-- Modello worker: inclusionai/ling-2.6-flash ($0.10/M input, $0.30/M output — vedi `docs/model-budget-analysis.md`)
-- Budget: ~$0.50-2.00/engagement completo (dipende dalla complessità)
+- Orchestrator model: any Hermes-compatible provider/model; the IDs shown in examples are replaceable seeds
+- Worker model: optional and replaceable; choose according to task complexity, privacy, latency, and cost
+- Budget: deployment-dependent; see the documented local, hybrid, economy, balanced, quality-first, and enterprise-controlled profiles

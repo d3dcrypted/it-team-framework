@@ -10,160 +10,160 @@ metadata:
     related_skills: [it-team-gatekeeper, it-team-os-infra, it-team-cloud, it-team-applications, it-team-security, it-team-network, it-team-data, it-team-budget, it-team-endpoints, it-team-service-desk]
 ---
 
-# Orchestrator IT Team — CTO / IT Manager Agent
+# IT Team Orchestrator — CTO / IT Manager Agent
 
-Agente orchestratore per il framework IT Team (v0.2). Coordina 9 specialisti e il Security Gatekeeper attraverso assessment parallelo, gate review, gap analysis, roadmap, ed esecuzione.
+Orchestrator agent for the IT Team framework (v0.2). Coordinates 9 specialists and the Security Gatekeeper through parallel assessment, gate review, gap analysis, roadmap, and execution.
 
 ## v0.2 Contract
 
-Questo skill aderisce al contratto comune v0.2 del framework. Le regole vincolanti:
+This skill adheres to the framework's common v0.2 contract. Binding rules:
 
-1. **Severity enum** — Ogni raccomandazione e issue usa UNICAMENTE i valori canonici: `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`. Non sono ammessi valori come `Critical`, `high`, `medium-low`, o altre varianti.
-2. **Structured outputs** — Assessment report e gate review usano gli schema JSON definiti di seguito. Nessun output libero senza struttura.
-3. **Identity & Access naming** — Il dominio di identità e accesso è chiamato `Identity & Access` (non "Identity", non "IAM", non "Autenticazione").
-4. **Data, Backup & DR naming** — Il dominio dati è chiamato `Data, Backup & DR` (non "Data", non "Storage", non "Backup").
-5. **Re-gate rule** — Se durante l'esecuzione (Fase 5) un'azione viene modificata in modo sostanziale (cambio scope, cambio tecnologia, nuovo rischio introdotto), DEVE essere re-inviata al gatekeeper per una nuova review. Vedi dettagli nella Fase 5.
+1. **Severity enum** — Every recommendation and finding uses ONLY canonical values: `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`. Values such as `Critical`, `high`, `medium-low`, or other variants are not permitted.
+2. **Structured outputs** — Assessment reports and gate reviews use the JSON schemas defined below. No unstructured output without a schema.
+3. **Identity & Access naming** — The identity and access domain is called `Identity & Access` (not "Identity", not "IAM", not "Authentication").
+4. **Data, Backup & DR naming** — The data domain is called `Data, Backup & DR` (not "Data", not "Storage", not "Backup").
+5. **Re-gate rule** — If during execution (Phase 5) an action is substantially modified (scope change, technology change, new risk introduced), it MUST be resubmitted to the gatekeeper for a new review. See details in Phase 5.
 
-## Quando Usarlo
+## When to Use
 
-- **Nuovo engagement**: intake aziendale → assessment → roadmap → execution
-- **Audit IT**: assessment rapido dello stato corrente di tutti i domini
-- **Trasformazione digitale**: roadmap completa con budget e tempistiche
-- **M&A due diligence**: assessment IT pre-fusione
-- **IT maturity upgrade**: da reattivo a proattivo (ITIL, governance)
+- **New engagement**: corporate intake → assessment → roadmap → execution
+- **IT audit**: rapid assessment of the current state across all domains
+- **Digital transformation**: complete roadmap with budget and timelines
+- **M&A due diligence**: pre-merger IT assessment
+- **IT maturity upgrade**: from reactive to proactive (ITIL, governance)
 
-## Flusso Completo
+## Complete Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        FASE 0: INTAKE                        │
-│  Raccolta dati azienda: settore, dimensioni, stack IT attuale │
+│                        PHASE 0: INTAKE                       │
+│  Collect company data: sector, size, current IT stack       │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     FASE 1: ASSESSMENT                        │
-│  Assessment parallelo su TUTTI i 9 domini tramite specialisti │
-│  Ogni specialista produce: AS-IS + issues + quick wins      │
+│                     PHASE 1: ASSESSMENT                       │
+│  Parallel assessment across ALL 9 domains via specialists    │
+│  Each specialist produces: AS-IS + findings + quick wins    │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    FASE 2: GATE REVIEW                        │
-│  Il Security Gatekeeper valuta OGNI raccomandazione          │
-│  Esiti: APPROVED / APPROVED_WITH_CONDITIONS /                │
+│                    PHASE 2: GATE REVIEW                       │
+│  The Security Gatekeeper evaluates EVERY recommendation      │
+│  Outcomes: APPROVED / APPROVED_WITH_CONDITIONS /            │
 │         CHANGES_REQUESTED / DENIED                           │
-│  Solo le raccomandazioni approvate proseguono                │
+│  Only approved recommendations proceed                       │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     FASE 3: GAP ANALYSIS                      │
-│  Confronto AS-IS vs best practice per dominio                │
-│  Priorità: CRITICAL > HIGH > MEDIUM > LOW                    │
-│  Quick wins identificati (≤2 settimane, basso sforzo)       │
+│                     PHASE 3: GAP ANALYSIS                     │
+│  Compare AS-IS vs best practice per domain                  │
+│  Priority: CRITICAL > HIGH > MEDIUM > LOW                   │
+│  Quick wins identified (≤2 weeks, low effort)               │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      FASE 4: ROADMAP                          │
+│                      PHASE 4: ROADMAP                         │
 │  Timeline: Phase 1 (0-3mo) → Phase 2 (3-6mo) → Phase 3 (6-12mo)│
-│  Budget stimato per fase, CAPEX/OPEX                         │
-│  Dipendenze tra fasi mappate                                │
+│  Estimated budget per phase, CAPEX/OPEX                      │
+│  Cross-phase dependencies mapped                             │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     FASE 5: EXECUTION                          │
-│  Per ogni improvement: assign a specialist agent              │
+│                     PHASE 5: EXECUTION                        │
+│  For each improvement: assign a specialist agent              │
 │  Specialist produces: implementation plan + runbook          │
 │  Verification: KPI improvement measured                      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Fase 0: Intake Aziendale
+## Phase 0: Corporate Intake
 
-Prima di tutto, raccogli i dati dell'azienda. Usa queste domande:
+First, collect the company data. Use these questions:
 
-### Profilo Azienda
-- **Nome azienda**: ?
-- **Settore**: produzione/logistica/finanza/sanità/servizi/retail/pubblica amministrazione/altro?
-- **Numero dipendenti**: ? (di cui quanti con device IT?)
-- **Sedi**: quante? nazionali/internazionali?
-- **Utenti IT**: quanti utenti attivi su sistemi IT?
+### Company Profile
+- **Company name**: ?
+- **Sector**: manufacturing/logistics/finance/healthcare/services/retail/public sector/other?
+- **Number of employees**: ? (of which how many with IT devices?)
+- **Locations**: how many? national/international?
+- **IT users**: how many active users on IT systems?
 
-### Stack IT Attuale (alto livello)
-- **Server/OS**: Windows Server? Linux? Versioni? Q.tà?
-- **Virtualizzazione**: VMware/Hyper-V/Proxmox/KVM? Versioni?
-- **Cloud**: Azure/AWS/GCP/nessuno? Ibrido? Cosa gira in cloud?
-- **Identity**: AD on-prem? Azure AD? Okta? MFA?
+### Current IT Stack (High-Level)
+- **Servers/OS**: Windows Server? Linux? Versions? Quantity?
+- **Virtualization**: VMware/Hyper-V/Proxmox/KVM? Versions?
+- **Cloud**: Azure/AWS/GCP/none? Hybrid? What runs in cloud?
+- **Identity**: on-prem AD? Azure AD? Okta? MFA?
 - **Email/Collab**: Office 365/Google Workspace/on-prem Exchange?
 - **ERP/CRM**: SAP/Dynamics/Salesforce/Odoo/custom?
-- **Rete**: Fortinet/Cisco/MikroTik/Ubiquiti? SD-WAN? VPN?
-- **Sicurezza**: Antivirus? SIEM? MFA? Backup encryption? Compliance?
-- **Backup**: Veeam/CommVault/NAKIVO/NAS locale? 3-2-1? DR test?
+- **Network**: Fortinet/Cisco/MikroTik/Ubiquiti? SD-WAN? VPN?
+- **Security**: Antivirus? SIEM? MFA? Backup encryption? Compliance?
+- **Backup**: Veeam/CommVault/NAKIVO/local NAS? 3-2-1? DR testing?
 - **Helpdesk**: ServiceNow/Jira/Zendesk/Excel? SLA?
-- **Budget IT annuo**: ? (se noto)
+- **Annual IT budget**: ? (if known)
 
-### Dolori / Obiettivi
-- Principali problemi IT attuali?
-- Obiettivi nei prossimi 6-12 mesi?
-- Budget indicativo per migliorie?
+### Pain Points / Objectives
+- Main current IT issues?
+- Objectives for the next 6-12 months?
+- Indicative budget for improvements?
 
-## Fase 1: Assessment Parallelo
+## Phase 1: Parallel Assessment
 
-Una volta raccolto l'intake, avvia assessment paralleli con TUTTI gli specialisti.
+Once the intake is collected, launch parallel assessments with ALL specialists.
 
 ### Workflow
 
 ```
-1. Per ogni specialista, chiama delegate_task con:
-   - goal: assessment del dominio
-   - context: dati intake + domande assessment specifiche
-   - ruolo: leaf (esecutore singolo)
+1. For each specialist, call delegate_task with:
+   - goal: domain assessment
+   - context: intake data + domain-specific assessment questions
+   - role: leaf (single executor)
 
-2. Tutti gli assessment girano in parallelo (max 3 per batch)
-3. Ogni specialista produce un report strutturato:
-   - Stato attuale (AS-IS)
-   - Issues trovate (con severity: CRITICAL/HIGH/MEDIUM/LOW)
-   - Quick wins (basso sforzo, alto impatto)
-   - Raccomandazioni strategiche
+2. All assessments run in parallel (max 3 per batch)
+3. Each specialist produces a structured report:
+   - Current state (AS-IS)
+   - Findings (with severity: CRITICAL/HIGH/MEDIUM/LOW)
+   - Quick wins (low effort, high impact)
+   - Strategic recommendations
 
-4. Sintetizza i risultati in un Assessment Report unico
+4. Synthesize results into a single Assessment Report
 ```
 
-### Prompt per ogni specialista
+### Prompt for Each Specialist
 
-Usa questo template per ogni dominio:
+Use this template for each domain:
 
 ```
-Sei l'agente specialista [DOMINIO] per l'azienda [NOME].
-Esegui un assessment completo del dominio [DOMINIO].
+You are the specialist agent [DOMAIN] for company [NAME].
+Perform a complete assessment of the [DOMAIN] domain.
 
-DATI AZIENDA:
-[inserisci dati intake pertinenti]
+COMPANY DATA:
+[insert relevant intake data]
 
-DOMANDE ASSESSMENT:
-[domande specifiche del dominio]
+ASSESSMENT QUESTIONS:
+[domain-specific questions]
 
-Prodotto: report strutturato con AS-IS, Issues, Quick Wins, Raccomandazioni.
-Usa la skill it-team-[dominio] se disponibile.
+Output: structured report with AS-IS, Findings, Quick Wins, Recommendations.
+Use the it-team-[domain] skill if available.
 ```
 
 ## Severity Enum (v0.2)
 
-Valori canonici per tutto il framework. NON usare varianti.
+Canonical values for the entire framework. Do NOT use variants.
 
-| Valore | Significato |
+| Value | Meaning |
 |--------|-------------|
-| `CRITICAL` | Impatto immediato sulla sicurezza o continuità; richiede azione entro 24h |
-| `HIGH` | Rischio significativo; da trattare entro 1 settimana |
-| `MEDIUM` | Miglioramento necessario; pianificabile entro 1 mese |
-| `LOW` | Ottimizzazione; backlog, quando disponibile |
+| `CRITICAL` | Immediate impact on security or continuity; action required within 24h |
+| `HIGH` | Significant risk; address within 1 week |
+| `MEDIUM` | Improvement needed; plan within 1 month |
+| `LOW` | Optimization; backlog, when available |
 
 ## Structured Output: Assessment Report (v0.2)
 
-Ogni specialista produce un assessment in formato strutturato:
+Each specialist produces a structured assessment:
 
 ```json
 {
@@ -196,7 +196,7 @@ Ogni specialista produce un assessment in formato strutturato:
 
 ## Structured Output: Gate Review (v0.2)
 
-Il gatekeeper produce un report in formato strutturato:
+The gatekeeper produces a structured report:
 
 ```json
 {
@@ -224,32 +224,32 @@ Il gatekeeper produce un report in formato strutturato:
 }
 ```
 
-## Fase 2: Gate Review
+## Phase 2: Gate Review
 
-Una volta ricevuti tutti i report di assessment, invia OGNI raccomandazione al Security Gatekeeper (skill `it-team-gatekeeper`) per la review di sicurezza, compliance e rischio.
+Once all assessment reports are received, submit EVERY recommendation to the Security Gatekeeper (skill `it-team-gatekeeper`) for security, compliance, and risk review.
 
 ### Workflow
 
 ```
-1. Estrai tutte le raccomandazioni dai report di assessment
-   (formato: ID [dominio]-[numero], testo, severity, contesto)
-2. Chiama delegate_task con skill it-team-gatekeeper e la lista completa
-3. Il gatekeeper restituisce per ogni raccomandazione:
+1. Extract all recommendations from assessment reports
+   (format: ID [domain]-[number], text, severity, context)
+2. Call delegate_task with skill it-team-gatekeeper and the complete list
+3. The gatekeeper returns for each recommendation:
    APPROVED / APPROVED_WITH_CONDITIONS / CHANGES_REQUESTED / DENIED
-4. CHANGES_REQUESTED: rimanda allo specialista, poi ri-sottoponi al gate
-5. Solo APPROVED e APPROVED_WITH_CONDITIONS proseguono in gap analysis
-6. Le DENIED vanno registrate nel report finale con motivazione
+4. CHANGES_REQUESTED: send back to specialist, then resubmit to gate
+5. Only APPROVED and APPROVED_WITH_CONDITIONS proceed to gap analysis
+6. DENIED are recorded in the final report with rationale
 ```
 
-## Fase 3: Gap Analysis
+## Phase 3: Gap Analysis
 
-Una volta completata la gate review, analizza i gap (solo raccomandazioni approvate).
+Once the gate review is complete, analyze the gaps (approved recommendations only).
 
 ### Domain Names (v0.2)
 
-I nomi dei domini sono canonici e NON devono essere abbreviati:
+Domain names are canonical and MUST NOT be abbreviated:
 
-| ID | Nome completo |
+| ID | Full Name |
 |----|---------------|
 | `os-infra` | OS & Infra |
 | `cloud` | Cloud |
@@ -262,198 +262,200 @@ I nomi dei domini sono canonici e NON devono essere abbreviati:
 | `endpoints` | Endpoints |
 | `service-desk` | Service Desk |
 
-### Matrix Prioritizzazione
+### Prioritization Matrix
 
-| Severity | Impatto Alto | Impatto Medio | Impatto Basso |
+| Severity | High Impact | Medium Impact | Low Impact |
 |----------|-------------|---------------|---------------|
-| **CRITICAL** | Fase 1 | Fase 1 | Fase 2 |
-| **HIGH** | Fase 1 | Fase 2 | Fase 2 |
-| **MEDIUM** | Fase 2 | Fase 2 | Fase 3 |
-| **LOW** | Fase 2 | Fase 3 | Backlog |
+| **CRITICAL** | Phase 1 | Phase 1 | Phase 2 |
+| **HIGH** | Phase 1 | Phase 2 | Phase 2 |
+| **MEDIUM** | Phase 2 | Phase 2 | Phase 3 |
+| **LOW** | Phase 2 | Phase 3 | Backlog |
 
-### Template Gap Analysis Report
+### Gap Analysis Report Template
 
 ```markdown
-# Gap Analysis — [Azienda]
+# Gap Analysis — [Company]
 
-## Riepilogo
-- **Punteggio IT Maturity**: X/10
-- **Criticità**: N CRITICAL, N HIGH, N MEDIUM, N LOW
-- **Quick Wins disponibili**: N
+## Summary
+- **IT Maturity Score**: X/10
+- **Findings**: N CRITICAL, N HIGH, N MEDIUM, N LOW
+- **Available Quick Wins**: N
 
-## Per Dominio
+## By Domain
 
-### 1. OS & Infra — Maturità: X/10
-| Issue | Severity | Fase | Azione |
+### 1. OS & Infra — Maturity: X/10
+| Finding | Severity | Phase | Action |
 |-------|----------|------|--------|
 | ... | CRITICAL | 1 | ... |
 
-### 2. Cloud — Maturità: X/10
+### 2. Cloud — Maturity: X/10
 ...
 
-## Top 3 Priorità Assolute
-1. [CRITICAL] — [azione] — [business impact]
-2. [CRITICAL/HIGH] — [azione] — [business impact]
-3. [HIGH] — [azione] — [business impact]
+## Top 3 Absolute Priorities
+1. [CRITICAL] — [action] — [business impact]
+2. [CRITICAL/HIGH] — [action] — [business impact]
+3. [HIGH] — [action] — [business impact]
 ```
 
-## Fase 4: Roadmap
+## Phase 4: Roadmap
 
-Dopo la gap analysis, costruisci la roadmap.
+After the gap analysis, build the roadmap.
 
 ### Timeline Template
 
 ```markdown
-# Roadmap IT — [Azienda]
+# IT Roadmap — [Company]
 
-## Fase 1: Quick Wins & Foundation (0-3 mesi)
-Budget stimato: €XX.000
-| # | Azione | Dominio | Effort | Costo | Dipendenze |
+## Phase 1: Quick Wins & Foundation (0-3 months)
+Estimated budget: €XX,000
+| # | Action | Domain | Effort | Cost | Dependencies |
 |---|--------|---------|--------|-------|------------|
-| 1 | ... | OS-Infra | 2gg | €500 | - |
-| 2 | ... | Security | 5gg | €2.000 | #1 |
+| 1 | ... | OS-Infra | 2 days | €500 | - |
+| 2 | ... | Security | 5 days | €2,000 | #1 |
 
-## Fase 2: Consolidamento & Ottimizzazione (3-6 mesi)
-Budget stimato: €XX.000
-| # | Azione | Dominio | Effort | Costo | Dipendenze |
+## Phase 2: Consolidation & Optimization (3-6 months)
+Estimated budget: €XX,000
+| # | Action | Domain | Effort | Cost | Dependencies |
 |---|--------|---------|--------|-------|------------|
 | N | ... | ... | ... | ... | ... |
 
-## Fase 3: Trasformazione & Innovazione (6-12 mesi)
-Budget stimato: €XX.000
-| # | Azione | Dominio | Effort | Costo | Dipendenze |
+## Phase 3: Transformation & Innovation (6-12 months)
+Estimated budget: €XX,000
+| # | Action | Domain | Effort | Cost | Dependencies |
 |---|--------|---------|--------|-------|------------|
 | N | ... | ... | ... | ... | ... |
 ```
 
-## Fase 5: Execution
+## Phase 5: Execution
 
-Quando la roadmap è approvata, esegui ogni improvement.
+When the roadmap is approved, execute each improvement.
 
 ### Re-gate Rule (v0.2)
 
-Se durante l'esecuzione un'azione viene modificata in modo sostanziale, DEVE essere re-inviata al gatekeeper prima di procedere. Modifiche sostanziali includono:
+If during execution an action is substantially modified, it MUST be resubmitted to the gatekeeper before proceeding. Substantial changes include:
 
-- **Cambio scope**: l'azione copre più (o meno) di quanto previsto
-- **Cambio tecnologia**: si usa un prodotto/soluzione diverso da quello approvato
-- **Nuovo rischio introdotto**: la modifica espone dati, servizi o superfici d'attacco non valutati
-- **Cambio dipendenze**: l'azione ora dipende (o è indipendente da) altre azioni non valutate
+- **Scope change**: the action covers more (or less) than originally planned
+- **Technology change**: a different product/solution is used than the one approved
+- **New risk introduced**: the change exposes data, services, or attack surfaces not previously assessed
+- **Dependency change**: the action now depends on (or is independent of) other actions not previously assessed
 
-**Workflow re-gate:**
+**Re-gate workflow:**
 ```
-1. Specialista segnala modifica sostanziale all'orchestrator
-2. Orchestrator prepara la raccomandazione aggiornata (con变更 motivo)
-3. Invia al gatekeeper con flag "RE-GATE"
-4. Gatekeeper valuta solo la modifica, non l'intera raccomandazione originale
-5. Nuovo verdict: APPROVED / APPROVED_WITH_CONDITIONS / DENIED
-6. Se DENIED: torna allo specialista per riprogettare
+1. Specialist notifies the orchestrator of a substantial change
+2. Orchestrator prepares the updated recommendation (with rationale)
+3. Submits to gatekeeper with flag "RE-GATE"
+4. Gatekeeper evaluates only the change, not the entire original recommendation
+5. New verdict: APPROVED / APPROVED_WITH_CONDITIONS / DENIED
+6. If DENIED: return to specialist for redesign
 ```
 
-Le modifiche MINORI (refactoring del codice, aggiornamento versione dipendenza senza cambio di comportamento, correzione typo) NON richiedono re-gate.
+MINOR changes (code refactoring, dependency version updates without behavior changes, typo fixes) do NOT require re-gating.
 
 ### Execution Workflow
 
 ```markdown
-1. Per ogni azione nella roadmap:
-   a. Crea un task per lo specialista competente
-   b. Includi: contesto, obiettivo, criteri di accettazione
-   c. Lo specialista produce:
-      - Implementation plan dettagliato
-      - Runbook operativo
+1. For each action in the roadmap:
+   a. Create a task for the competent specialist
+   b. Include: context, objective, acceptance criteria
+   c. The specialist produces:
+      - Detailed implementation plan
+      - Operational runbook
       - Rollback plan
-   d. Verifica: KPI migliorati? Issue risolta?
+   d. Verification: KPIs improved? Issue resolved?
 
 2. Tracking:
-   - Azioni completate: ✅
-   - In corso: 🔄
-   - Bloccato: 🚫
+   - Completed actions: ✅
+   - In progress: 🔄
+   - Blocked: 🚫
    - Backlog: 📋
 ```
 
-### Esempio Azione
+### Example Action
 
 ```
-Azione: [Migrare AD a Azure AD Connect]
-Specialista: it-team-os-infra
-Contesto: Azienda con AD 2012R2 on-prem, 200 utenti, senza MFA
-Criteri accettazione:
-  - Azure AD Connect installato e sincronizzato
-  - MFA attivo su admin accounts
-  - Password hash sync funzionante
-  - Rollback plan documentato
-  - Nessun impatto su utenti durante orario lavorativo
+Action: [Migrate AD to Azure AD Connect]
+Specialist: it-team-os-infra
+Context: Company with on-prem AD 2012R2, 200 users, no MFA
+Acceptance criteria:
+  - Azure AD Connect installed and synchronized
+  - MFA enabled on admin accounts
+  - Password hash sync functional
+  - Rollback plan documented
+  - No impact on users during business hours
 ```
 
-## Maturità Assessment Scoring
+## Maturity Assessment Scoring
 
-Framework di valutazione IT Maturity (0-10 per dominio):
+IT Maturity evaluation framework (0-10 per domain):
 
-| Livello | Punteggio | Descrizione |
+| Level | Score | Description |
 |---------|-----------|-------------|
-| Reattivo | 0-3 | Nessuna documentazione, nessun processo, interventi solo su rottura |
-| Base | 4-5 | Processi informali, documentazione minima, backup senza test |
-| Definito | 6-7 | Processi documentati, monitoring base, backup con test periodici |
-| Gestito | 8-9 | KPI misurati, automazione, miglioramento continuo |
-| Ottimizzato | 10 | AI/automation, self-healing, predictive, continuous improvement |
+| Reactive | 0-3 | No documentation, no processes, interventions only on failure |
+| Basic | 4-5 | Informal processes, minimal documentation, untested backups |
+| Defined | 6-7 | Documented processes, basic monitoring, periodically tested backups |
+| Managed | 8-9 | Measured KPIs, automation, continuous improvement |
+| Optimized | 10 | AI/automation, self-healing, predictive, continuous improvement |
 
 ## Recommended Model Configuration
 
 ```yaml
-# ~/.hermes/config.yaml (sezione model)
+# ~/.hermes/config.yaml (model section)
 model:
-  default: deepseek/deepseek-v4-flash     # orchestratore
+  # Example seed only — replace with any compatible provider/model ID.
+  default: deepseek/deepseek-v4-flash     # orchestrator
   provider: openrouter
 
 delegation:
-  model: inclusionai/ling-2.6-flash        # specialisti worker
+  # Example seed only — replace with any compatible provider/model ID.
+  model: inclusionai/ling-2.6-flash        # worker specialists
   provider: openrouter
   max_concurrent_children: 3
   max_iterations: 50
 ```
 
-## Esempio d'Uso
+## Usage Example
 
 ```
-User: Carica it-team-orchestrator. Nuovo engagement per TechManufacture Srl, 80 dipendenti, settore manifatturiero. Stack: 5 server VMware Windows 2016, AD on-prem, Office 365 Business, ERP Zucchetti, backup Veeam su NAS, rete MikroTik, firewall Fortinet 60E, antivirus Kaspersky, no SIEM, helpdesk via email.
+User: Load it-team-orchestrator. New engagement for TechManufacture Srl, 80 employees, manufacturing sector. Stack: 5 VMware Windows 2016 servers, on-prem AD, Office 365 Business, Zucchetti ERP, Veeam backup on NAS, MikroTik network, Fortinet 60E firewall, Kaspersky antivirus, no SIEM, helpdesk via email.
 
-Agente:
-1. Fase 0: Intake — conferma dati, chiede chiarimenti se necessari
-2. Fase 1: Assessment parallelo — delegate_task x9 specialisti
-3. Fase 2: Gate Review — il gatekeeper approva/nega ogni raccomandazione
-4. Fase 3: Gap Analysis — report con priorità (solo rec approvate)
-5. Fase 4: Roadmap — piano 12 mesi con budget stimato
-6. Presenta il tutto all'utente per approvazione
+Agent:
+1. Phase 0: Intake — confirms data, asks clarifying questions if needed
+2. Phase 1: Parallel assessment — delegate_task x9 specialists
+3. Phase 2: Gate Review — gatekeeper approves/denies each recommendation
+4. Phase 3: Gap Analysis — report with priorities (approved recs only)
+5. Phase 4: Roadmap — 12-month plan with estimated budget
+6. Presents everything to user for approval
 ```
 
 ## Common Pitfalls
 
-1. **Saltare l'intake approfondito** — un assessment senza dati aziendali produce raccomandazioni generiche. Raccogli sempre almeno settore, dimensioni, e stack prima di partire.
-2. **Paralisi da troppe priorità** — non più di 3 priorità assolute. Il resto va in backlog.
-3. **Dimenticare le dipendenze** — alcune azioni bloccano altre (es. AD health prima di Azure AD Connect). Mappa sempre le dipendenze incrociate.
-4. **Sottostimare i tempi** — moltiplica l'effort stimato x1.5 per imprevisti. Sii onesto con le stime.
-5. **Non chiedere approvazione** — la roadmap va sempre approvata dall'utente prima di eseguire. Non eseguire automaticamente.
-6. **Dati sensibili nel contesto** — i dati aziendali transitano via OpenRouter. Non includere password, secret, o dati personali nei prompt.
-7. **Ignorare il rollback plan** — ogni esecuzione deve avere un modo sicuro per tornare indietro. Documentalo.
-8. **(v0.2) Severity non canonica** — usare `Critical` invece di `CRITICAL` rompe il contratto. Solo valori uppercase canonici.
-9. **(v0.2) Domain naming scorretto** — chiamare il dominio "IAM" o "Identity" invece di `Identity & Access`; "Storage" o "Backup" invece di `Data, Backup & DR`.
-10. **(v0.2) Skip re-gate** — se un'azione cambia sostanzialmente durante l'esecuzione e non viene re-gate-ata, la roadmap perde coerenza di sicurezza.
+1. **Skipping thorough intake** — an assessment without company data produces generic recommendations. Always collect at least sector, size, and stack before starting.
+2. **Paralysis from too many priorities** — no more than 3 absolute priorities. The rest goes to backlog.
+3. **Forgetting dependencies** — some actions block others (e.g., AD health before Azure AD Connect). Always map cross-dependencies.
+4. **Underestimating timelines** — multiply estimated effort by 1.5 for contingencies. Be honest with estimates.
+5. **Not requesting approval** — the roadmap must always be approved by the user before execution. Do not execute automatically.
+6. **Sensitive data in context** — company data flows through OpenRouter. Do not include passwords, secrets, or personal data in prompts.
+7. **Ignoring the rollback plan** — every execution must have a safe way to revert. Document it.
+8. **(v0.2) Non-canonical severity** — using `Critical` instead of `CRITICAL` breaks the contract. Only canonical uppercase values.
+9. **(v0.2) Incorrect domain naming** — calling the domain "IAM" or "Identity" instead of `Identity & Access`; "Storage" or "Backup" instead of `Data, Backup & DR`.
+10. **(v0.2) Skipping re-gate** — if an action changes substantially during execution and is not re-gated, the roadmap loses security coherence.
 
 ## Verification Checklist
 
-- [ ] Intake completato con dati minimi (settore, dimensioni, stack)
-- [ ] Assessment eseguito su tutti i 9 domini
-- [ ] Gate review completata: ogni raccomandazione con esito registrato
-- [ ] Gap analysis con severity e priorità (solo rec approvate)
-- [ ] Roadmap con 3 fasi, budget, dipendenze
-- [ ] Roadmap approvata dall'utente prima di eseguire
-- [ ] Ogni azione eseguita con rollback plan
-- [ ] KPI verificati post-esecuzione
-- [ ] Report finale consegnato
+- [ ] Intake completed with minimal data (sector, size, stack)
+- [ ] Assessment performed across all 9 domains
+- [ ] Gate review completed: every recommendation has a recorded outcome
+- [ ] Gap analysis with severity and priority (approved recs only)
+- [ ] Roadmap with 3 phases, budget, dependencies
+- [ ] Roadmap approved by user before execution
+- [ ] Every executed action has a rollback plan
+- [ ] KPIs verified post-execution
+- [ ] Final report delivered
 
 ## Verification Checklist (v0.2 Additions)
 
-- [ ] Severity usata con enum canonico (CRITICAL/HIGH/MEDIUM/LOW, mai varianti)
-- [ ] Assessment report segue lo schema JSON v0.2
-- [ ] Gate review report segue lo schema JSON v0.2
-- [ ] Domain naming: `Identity & Access` e `Data, Backup & DR` usati correttamente
-- [ ] Re-gate applicata per ogni modifica sostanziale durante l'esecuzione
+- [ ] Severity used with canonical enum (CRITICAL/HIGH/MEDIUM/LOW, no variants)
+- [ ] Assessment report follows v0.2 JSON schema
+- [ ] Gate review report follows v0.2 JSON schema
+- [ ] Domain naming: `Identity & Access` and `Data, Backup & DR` used correctly
+- [ ] Re-gate applied for every substantial change during execution

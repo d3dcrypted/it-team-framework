@@ -1,40 +1,40 @@
 #!/bin/bash
-# new-engagement.sh — Avvia un nuovo engagement IT Team Framework
-# Uso: ./scripts/new-engagement.sh "Nome Azienda" [--size N] [--sector manufacturing] [--stack "..."] [--stdout]
+# new-engagement.sh — Start a new IT Team Framework engagement
+# Usage: ./scripts/new-engagement.sh "Company Name" [--size N] [--sector manufacturing] [--stack "..."] [--stdout]
 #
-# Crea una sessione Hermes preconfigurata con lo skill orchestrator
-# e il contesto iniziale precompilato.
+# Creates a preconfigured Hermes session with the orchestrator skill
+# and pre-filled initial context.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 usage() {
-    echo "Uso: $0 \"Nome Azienda\" [opzioni]"
+    echo "Usage: $0 \"Company Name\" [options]"
     echo ""
-    echo "Opzioni:"
-    echo "  --size N           Numero dipendenti (default: chiesto durante intake)"
-    echo "  --sector SETTORE   Settore merceologico"
+    echo "Options:"
+    echo "  --size N           Number of employees (default: asked during intake)"
+    echo "  --sector SECTOR    Industry sector"
     echo "    (manufacturing|logistics|finance|healthcare|services|retail|pa|other)"
-    echo "  --stack \"...\"      Stack IT attuale (testo libero)"
-    echo "  --stdout           Stampa il prompt invece di avviare hermes chat"
-    echo "  -h, --help         Questo aiuto"
+    echo "  --stack \"...\"      Current IT stack (free text)"
+    echo "  --stdout           Print the prompt instead of starting hermes chat"
+    echo "  -h, --help         This help"
     echo ""
-    echo "Esempi:"
+    echo "Examples:"
     echo "  $0 \"TechSrl\" --size 50 --sector manufacturing"
-    echo "  $0 \"LogisticaSpA\" --size 200 --sector logistics --stack \"VMware vSphere, AD, O365, SAP\""
+    echo "  $0 \"LogisticsInc\" --size 200 --sector logistics --stack \"VMware vSphere, AD, O365, SAP\""
     echo ""
     exit 0
 }
 
-# Valori di default
+# Default values
 COMPANY=""
 SIZE=""
 SECTOR=""
 STACK=""
 STDOUT=false
 
-# Parsing argomenti
+# Argument parsing
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help) usage ;;
@@ -42,60 +42,60 @@ while [[ $# -gt 0 ]]; do
         --sector) SECTOR="$2"; shift 2 ;;
         --stack) STACK="$2"; shift 2 ;;
         --stdout) STDOUT=true; shift ;;
-        -*|--*) echo "Opzione sconosciuta: $1"; usage ;;
+        -*|--*) echo "Unknown option: $1"; usage ;;
         *) COMPANY="$1"; shift ;;
     esac
 done
 
 if [ -z "$COMPANY" ]; then
-    echo "Errore: specifica il nome azienda"
+    echo "Error: specify the company name"
     usage
 fi
 
-# Mappa settore → traduzione italiana
+# Sector mapping to English labels
 case "$SECTOR" in
-    manufacturing) SECTOR_IT="Manifatturiero/Produzione" ;;
-    logistics) SECTOR_IT="Logistica/Trasporti" ;;
-    finance) SECTOR_IT="Finanza/Bancario/Assicurazioni" ;;
-    healthcare) SECTOR_IT="Sanità" ;;
-    services) SECTOR_IT="Servizi/Consulenza" ;;
-    retail) SECTOR_IT="Retail/Commercio" ;;
-    pa) SECTOR_IT="Pubblica Amministrazione" ;;
-    other|"") SECTOR_IT="[specificare settore]" ;;
-    *) SECTOR_IT="$SECTOR" ;;
+    manufacturing) SECTOR_EN="Manufacturing/Production" ;;
+    logistics) SECTOR_EN="Logistics/Transportation" ;;
+    finance) SECTOR_EN="Finance/Banking/Insurance" ;;
+    healthcare) SECTOR_EN="Healthcare" ;;
+    services) SECTOR_EN="Services/Consulting" ;;
+    retail) SECTOR_EN="Retail/Commerce" ;;
+    pa) SECTOR_EN="Public Administration" ;;
+    other|"") SECTOR_EN="[specify sector]" ;;
+    *) SECTOR_EN="$SECTOR" ;;
 esac
 
-# Costruisci il prompt iniziale
-PROMPT="Nuovo engagement IT Team Framework.
+# Build the initial prompt
+PROMPT="New IT Team Framework engagement.
 
-Carica skill: it-team-orchestrator
+Load skill: it-team-orchestrator
 
-FASE 0 — INTAKE AZIENDALE
+PHASE 0 — COMPANY INTAKE
 
-Nome azienda: ${COMPANY}
-Settore: ${SECTOR_IT}"
+Company name: ${COMPANY}
+Sector: ${SECTOR_EN}"
 
 if [ -n "$SIZE" ]; then
     PROMPT="${PROMPT}
-Dipendenti: ${SIZE}"
+Employees: ${SIZE}"
 fi
 
 if [ -n "$STACK" ]; then
     PROMPT="${PROMPT}
-Stack IT attuale: ${STACK}"
+Current IT stack: ${STACK}"
 fi
 
 PROMPT="${PROMPT}
 
-Procedi con la Fase 0 (Intake) raccogliendo eventuali dati mancanti, poi Fase 1 (Assessment parallelo) con tutti i 9 specialisti, Fase 2 (Gate Review con it-team-gatekeeper), Fase 3 (Gap Analysis), Fase 4 (Roadmap) e presentami il risultato. Non eseguire automaticamente — presentami prima la roadmap per approvazione."
+Proceed with Phase 0 (Intake) by gathering any missing data, then Phase 1 (Parallel Assessment) with all 9 specialists, Phase 2 (Gate Review with it-team-gatekeeper), Phase 3 (Gap Analysis), Phase 4 (Roadmap) and present me the results. Do not execute automatically — present the roadmap to me first for approval."
 
 if [ "$STDOUT" = true ]; then
-    echo "=== Prompt per Hermes ==="
+    echo "=== Prompt for Hermes ==="
     echo ""
     echo "$PROMPT"
 else
-    # Avvia hermes chat con il prompt
-    echo "🚀 Avvio engagement per ${COMPANY}..."
+    # Start hermes chat with the prompt
+    echo "🚀 Starting engagement for ${COMPANY}..."
     echo ""
     echo "hermes chat --eval \"\$PROMPT\""
     hermes chat --eval "$PROMPT"

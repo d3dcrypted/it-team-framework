@@ -122,6 +122,7 @@ def init_db():
     if cur.execute("SELECT COUNT(*) AS cnt FROM models").fetchone()["cnt"] == 0:
         cur.executemany(
             "INSERT INTO models VALUES (?,?,?)",
+            # Demonstration seeds only; replace with the operator's provider/model catalog.
             [("openai/gpt-5.6-luna", 0.70, 0.70), ("xiaomi/mimo-v2.5", 0.42, 0.42)],
         )
     conn.commit()

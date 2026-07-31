@@ -11,52 +11,52 @@ metadata:
     related_skills: [it-team-budget, it-team-network, it-team-security]
 ---
 
-# Specialista Cloud — Cloud Architect
+# Cloud Specialist — Cloud Architect
 
-Dominio: cloud IaaS/PaaS/SaaS (Azure, AWS, GCP), landing zone, migration, cost optimization (FinOps), hybrid cloud, cloud governance.
+Domain: IaaS/PaaS/SaaS cloud (Azure, AWS, GCP), landing zone, migration, cost optimization (FinOps), hybrid cloud, cloud governance.
 
 ## Assessment Protocol
 
-### Cosa Controllare
+### What to Check
 
-**Architettura Cloud**
-- Provider cloud attuali (Azure/AWS/GCP/multi-cloud)
-- Modello di deployment (IaaS/PaaS/SaaS/serverless)
-- Landing zone: strutturata o ad-hoc? Resource group organizzati?
-- Hybrid cloud: connessione on-prem al cloud? (ExpressRoute/Direct Connect/VPN)
-- Region deployment: singola regione o multi-regione?
+**Cloud Architecture**
+- Current cloud providers (Azure/AWS/GCP/multi-cloud)
+- Deployment model (IaaS/PaaS/SaaS/serverless)
+- Landing zone: structured or ad-hoc? Resource groups organized?
+- Hybrid cloud: on-prem to cloud connectivity? (ExpressRoute/Direct Connect/VPN)
+- Region deployment: single region or multi-region?
 - Container orchestration: AKS/EKS/GKE? Self-managed?
 
-**Costi e FinOps**
-- Costo cloud mensile medio e trend (stabile/crescente)
-- Reserved instances / Savings Plans utilizzate?
-- Resource right-sizing: compute/storage ottimizzati?
-- Tagging strategy per chargeback/showback?
-- Budget alerts configurati?
-- Cost anomalies detection attiva?
+**Costs and FinOps**
+- Average monthly cloud spend and trend (stable/increasing)
+- Reserved instances / Savings Plans in use?
+- Resource right-sizing: compute/storage optimized?
+- Tagging strategy for chargeback/showback?
+- Budget alerts configured?
+- Cost anomalies detection active?
 
 **Security Posture**
-- RBAC: least privilege applicato?
-- Network Security Groups / Security Groups: regole granulari?
-- WAF/Web Application Firewall?
+- RBAC: least privilege applied?
+- Network Security Groups / Security Groups: granular rules?
+- WAF / Web Application Firewall?
 - DDoS protection?
 - Encryption: at-rest + in-transit?
 - Key management: managed HSM? BYOK?
-- Audit logging: retention centralizzata?
+- Audit logging: centralized retention?
 
 **Governance**
 - Policy / Blueprints / Landing Zone?
-- Subscription/Account structure gerarchica?
-- Management groups organizzati?
+- Hierarchical subscription/account structure?
+- Management groups organized?
 - Compliance monitoring? (Azure Policy/AWS Config)
 - Backup & DR: region replication? Snapshot policy?
 - Cost governance: spending limits? Quotas?
 
-### Metriche Chiave
+### Key Metrics
 
-| Metrica | Target | Come Misurare |
+| Metric | Target | How to Measure |
 |---------|--------|---------------|
-| Cloud spend/utilization ratio | < 70% | Dashboard cost management |
+| Cloud spend/utilization ratio | < 70% | Cost management dashboard |
 | Instance coverage RI/SP | > 60% | RI/SP recommendations |
 | Tag compliance | > 95% | Policy compliance report |
 | Unused resources | < 5% | Advisor/Trusted Advisor |
@@ -65,9 +65,9 @@ Dominio: cloud IaaS/PaaS/SaaS (Azure, AWS, GCP), landing zone, migration, cost o
 
 ## Improvement Catalog
 
-### Quick Wins (<= 2 settimane)
+### Quick Wins (<= 2 weeks)
 
-| # | AZIONE | IMPATTO | SFORZO |
+| # | ACTION | IMPACT | EFFORT |
 |---|--------|---------|--------|
 | 1 | Enable budget alerts | HIGH | 1h |
 | 2 | Delete unattached disks/unused IPs | MEDIUM | 2h |
@@ -78,55 +78,55 @@ Dominio: cloud IaaS/PaaS/SaaS (Azure, AWS, GCP), landing zone, migration, cost o
 | 7 | Set up cost anomalies detection | MEDIUM | 2h |
 | 8 | Review and cleanup RBAC assignments | HIGH | 4h |
 
-### Migliorie Strategiche (1-3 mesi)
+### Strategic Improvements (1-3 months)
 
 **1. Landing Zone Setup**
-Struttura gerarchica con management groups, policy, networking hub-spoke.
+Hierarchical structure with management groups, policy, networking hub-spoke.
 Azure: Enterprise Scale / ALZ | AWS: Control Tower | GCP: Resource Hierarchy
-Effort: 2-4 settimane | Costo: solo effort
+Effort: 2-4 weeks | Cost: effort only
 
 **2. Cost Optimization Program**
-Ridurre cloud spend del 20-40% con RI/SP coverage, right-sizing automation, dev/test scheduling, storage tiering.
-Effort: 2 settimane iniziali + continuo | Risparmio: 20-40%
+Reduce cloud spend by 20-40% with RI/SP coverage, right-sizing automation, dev/test scheduling, storage tiering.
+Effort: 2 initial weeks + ongoing | Savings: 20-40%
 
 **3. Cloud Security Hardening**
-Zero-trust: network segmentation hub-spoke, policy compliance, Key Vault per secret, private endpoints, DDoS protection.
-Effort: 3-4 settimane
+Zero-trust: network segmentation hub-spoke, policy compliance, Key Vault for secrets, private endpoints, DDoS protection.
+Effort: 3-4 weeks
 
 **4. Disaster Recovery in Cloud**
-DR automation: Site Recovery, region replication, runbook automation, DR test trimestrale.
-Effort: 2-3 settimane
+DR automation: Site Recovery, region replication, runbook automation, quarterly DR testing.
+Effort: 2-3 weeks
 
 **5. Container Migration Assessment**
 Containerization assessment, AKS/EKS/GKE setup, CI/CD pipeline, monitoring.
-Effort: 4-6 settimane
+Effort: 4-6 weeks
 
 ## Implementation Guide
 
-### Cloud Migration - Fasi
+### Cloud Migration - Phases
 
-- **FASE 1 - Assessment (2 settimane)**: Inventario risorse, dependency mapping, TCO comparison, workload prioritization
-- **FASE 2 - Foundation (3-4 settimane)**: Landing zone, connectivity VPN/ExpressRoute, SSO identity, backup baseline
-- **FASE 3 - Migration (variabile)**: Lift & shift, re-architect per PaaS, cutover con rollback, testing
-- **FASE 4 - Optimization (continuo)**: FinOps review, security posture, IaC automation (Terraform/Bicep)
+- **PHASE 1 - Assessment (2 weeks)**: Resource inventory, dependency mapping, TCO comparison, workload prioritization
+- **PHASE 2 - Foundation (3-4 weeks)**: Landing zone, VPN/ExpressRoute connectivity, SSO identity, backup baseline
+- **PHASE 3 - Migration (variable)**: Lift & shift, re-architect to PaaS, cutover with rollback, testing
+- **PHASE 4 - Optimization (ongoing)**: FinOps review, security posture, IaC automation (Terraform/Bicep)
 
-### Tool Consigliati
+### Recommended Tools
 
-- **Terraform** - IaC multi-cloud (gratuito)
-- **Infracost** - Cost estimation IaC
-- **Azure Cost Mgmt / AWS Cost Explorer** - Cost analysis (incluso)
-- **Prometheus/Grafana** - Monitoring FOSS
-- **CloudHealth** - Multi-cloud FinOps (a pagamento)
+- **Terraform** - Multi-cloud IaC (free)
+- **Infracost** - IaC cost estimation
+- **Azure Cost Mgmt / AWS Cost Explorer** - Cost analysis (included)
+- **Prometheus/Grafana** - FOSS monitoring
+- **CloudHealth** - Multi-cloud FinOps (paid)
 
-### Errori Comuni
+### Common Errors
 
-1. Landing zone saltata -> caos. Sempre landing zone prima.
-2. Tag non applicati -> chargeback impossibile. Obbliga via policy.
-3. Overprovisioning -> VM grandi per sicurezza. Right-sizing automation.
-4. Nessun RI/SP -> on-demand 30-50% piu caro.
-5. Backup dimenticato -> backup su TUTTE le risorse.
-6. Accessi troppo ampi -> RBAC strict (contributor su RG, non subscription).
-7. Secret in chiaro -> Key Vault/Secrets Manager sempre.
+1. Skipping landing zone → chaos. Always landing zone first.
+2. Tags not applied → chargeback impossible. Enforce via policy.
+3. Overprovisioning → large VMs for safety. Right-sizing automation.
+4. No RI/SP → on-demand 30-50% more expensive.
+5. Forgotten backup → backup ALL resources.
+6. Overly broad access → strict RBAC (contributor on RG, not subscription).
+7. Secrets in plaintext → Key Vault/Secrets Manager always.
 ---
 
 ## Output Contract

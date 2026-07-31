@@ -11,177 +11,174 @@ metadata:
     related_skills: [it-team-endpoints, it-team-applications]
 ---
 
-# Service Desk & Support — Specialista IT (it-team-service-desk)
+# Service Desk & Support — IT Specialist (it-team-service-desk)
 
-Questa skill fornisce un protocollo strutturato per valutare, migliorare e operare un service desk IT allineato agli standard ITIL, con integrazione ticketing (ServiceNow, Jira, Zendesk, Freshservice), gestione SLA/SLO, knowledge base, formazione, onboarding/offboarding, IT asset management e self-service.
+This skill provides a structured protocol for assessing, improving, and operating an IT service desk aligned with ITIL standards, with ticketing integration (ServiceNow, Jira, Zendesk, Freshservice), SLA/SLO management, knowledge base, training, onboarding/offboarding, IT asset management, and self-service.
 
-## 🎯 Obiettivi della skill
+## Skill Objectives
 
-- Valutare lo stato maturo del service desk e dei processi ITIL.
-- Misurare KPI critici: volume ticket, SLA adherence, First Response Time (FRT), Time to Resolution (TTR), CSAT, knowledge base coverage.
-- Definire e tracciare miglioramenti su ticketing, knowledge base, SLA, automazioni e formazione.
-- Supportare l’integrazione con tool di ticketing e asset management.
+- Assess the maturity of the service desk and ITIL processes.
+- Measure critical KPIs: ticket volume, SLA adherence, First Response Time (FRT), Time to Resolution (TTR), CSAT, knowledge base coverage.
+- Define and track improvements across ticketing, knowledge base, SLA, automations, and training.
+- Support integration with ticketing and asset management tools.
 
-## 📋 Assessment Protocol
+## Assessment Protocol
 
-Esegui una valutazione completa con i seguenti checkpoint. Usa strumenti a tua scelta (API ticketing, report, interviste, sondaggi).
+Perform a complete assessment using the following checkpoints. Use tools of your choice (ticketing API, reports, interviews, surveys).
 
 ### 1. Ticket Volume & Trends
-- Estrai volume giornaliero/settimanale/mensile e trend.
-- Analisi per categoria, priorità, canale (email, web, telefono, chat).
-- Picchi stagionali, crescita o cali anomali.
+- Extract daily/weekly/monthly volume and trends.
+- Analysis by category, priority, channel (email, web, phone, chat).
+- Seasonal peaks, anomalous growth or declines.
 
 ### 2. SLA / SLO Adherence
-- Percentuale di ticket rispettati SLA per categoria/priorità.
-- SLA breach rate e root cause dei ritardi.
-- Allineamento con obiettivi SLO (es. risoluzione entro 24/48/72 ore).
+- Percentage of tickets meeting SLA by category/priority.
+- SLA breach rate and root cause of delays.
+- Alignment with SLO targets (e.g., resolution within 24/48/72 hours).
 
 ### 3. First Response Time (FRT)
-- Media e distribuzione del tempo prima della prima risposta.
-- Confronto con target (es. <2 ore per critiche/alte, <24 ore per medie/basse).
+- Average and distribution of time before first response.
+- Comparison against targets (e.g., <2 hours for critical/high, <24 hours for medium/low).
 
 ### 4. Time to Resolution (TTR)
-- Media e distribuzione del tempo di chiusura.
-- TTR per categoria/problema noto.
+- Average and distribution of closure time.
+- TTR by category/known problem.
 
 ### 5. CSAT (Customer Satisfaction)
-- Media sondaggi post-intervento.
-- Distribuzione tra very satisfied, satisfied, neutral, dissatisfied, very dissatisfied.
-- Commenti free text per temi ricorrenti.
+- Average post-interaction survey scores.
+- Distribution across very satisfied, satisfied, neutral, dissatisfied, very dissatisfied.
+- Free text comments for recurring themes.
 
 ### 6. Knowledge Base Coverage
-- Percentuale di ticket con articoli KB collegati/inseriti.
-- Numero totale articoli, frequenza d’uso (search hits), tasso di auto-servizio.
-- Qualità: accuratezza, aggiornamento, copertura temi frequenti.
+- Percentage of tickets with linked/inserted KB articles.
+- Total article count, usage frequency (search hits), self-service rate.
+- Quality: accuracy, currency, coverage of frequent topics.
 
 ### 7. ITIL Process Maturity
-- Valutazione a maturità (0–3 o 0–5) per: Incidente, Problema, Cambiamento, Richiesta di Servizio, Release.
-- Documentazione, ruoli, responsabilità, workflow, registri (RFC, Problem, Known Error).
+- Maturity assessment (0–3 or 0–5) for: Incident, Problem, Change, Service Request, Release.
+- Documentation, roles, responsibilities, workflows, registers (RFC, Problem, Known Error).
 
 ### 8. Onboarding / Offboarding Workflow
-- Tempo medio per attivare/revocare accessi, account, licenze.
-- Completezza checklist (hardware, software, email, SSO, autorizzazioni).
-- Esperienza utente e feedback dipendenti.
+- Average time to provision/revoke access, accounts, licenses.
+- Checklist completeness (hardware, software, email, SSO, permissions).
+- User experience and employee feedback.
 
 ### 9. IT Asset Management
-- Accuratezza inventario (hardware/software/licenze).
-- Lifecycle, manutenzione, smaltimento.
-- Allineamento a policy licenze e compliance.
+- Inventory accuracy (hardware/software/licenses).
+- Lifecycle, maintenance, disposal.
+- Alignment with licensing and compliance policies.
 
-## 🚀 Improvement Catalog
+## Improvement Catalog
 
-Priorizza in base ai risultati dell’Assessment. Ecco possibili interventi:
+Prioritize based on Assessment results. Possible interventions:
 
 ### 1. ITIL Process Implementation
-- Definire chiaramente processi: ricezione, classificazione, assegnazione, SLA, escalation, chiusura.
-- Implementare registri e RACI.
-- Stabilire cadenze (daily triage, weekly review SLA).
+- Clearly define processes: intake, classification, assignment, SLA, escalation, closure.
+- Implement registers and RACI.
+- Establish cadences (daily triage, weekly SLA review).
 
 ### 2. Knowledge Base Creation & Optimization
-- Struttura categorica, template articoli, proprietario contenuto.
-- Integrazione con ticketing: suggerimento KB al momento della creazione.
-- Governance: review periodica, versionamento, KPIs (tasso uso, auto-servizio).
+- Categorical structure, article templates, content ownership.
+- Ticketing integration: KB suggestion at creation time.
+- Governance: periodic review, versioning, KPIs (usage rate, self-service).
 
 ### 3. Self-Service Portal
-- Catalogo servizi self-service, modulo richiesta, stato ticket.
-- Accesso integrato a conoscenze, FAQ, form.
-- Misurare tasso di adozione e riduzione carico su agenti.
+- Self-service catalog, request forms, ticket status.
+- Integrated access to knowledge, FAQs, forms.
+- Measure adoption rate and agent workload reduction.
 
 ### 4. SLA / SLO Tuning
-- Definire target realistici per ciascuna categoria/priorità.
-- Automazione escalation in base a SLA breach.
-- Dashboard in tempo reale SLA adherence.
+- Define realistic targets for each category/priority.
+- Automated escalation on SLA breach.
+- Real-time SLA adherence dashboard.
 
 ### 5. Chatbot Integration
-- Bot per FAQ, triage iniziale, ricerca KB, creazione ticket.
-- Fallback chiaro a agente umano.
-- Misurare FRT ridotto, tasso di risoluzione bot, soddisfazione.
+- Bot for FAQ, initial triage, KB search, ticket creation.
+- Clear fallback to human agent.
+- Measure reduced FRT, bot resolution rate, satisfaction.
 
 ### 6. Automated Onboarding / Offboarding
-- Moduli di compilazione, integrazione con HRIS/Active Directory/SSO.
-- Workflow approvazioni, checklist, notifiche.
-- Misurare time-to-produttività e completezza.
+- Forms, HRIS/Active Directory/SSO integration.
+- Approval workflows, checklists, notifications.
+- Measure time-to-productivity and completeness.
 
 ### 7. Training Program
-- Percorsi formativi: ITIL basics, tool ticketing, KB authoring, soft skills.
-- Formazione new hire, refresh periodico, certificazioni.
-- Valutazione competenze pre/post training.
+- Training paths: ITIL basics, ticketing tools, KB authoring, soft skills.
+- New hire training, periodic refresh, certifications.
+- Pre/post-training competency assessment.
 
 ### 8. IT Asset Management Enhancements
-- Automazione discovery, integrazione CMDB, licenze monitoraggio.
-- Policy di riordino, smaltimento sicuro, report compliance.
+- Discovery automation, CMDB integration, license monitoring.
+- Reorder policy, secure disposal, compliance reporting.
 
-## 📐 Implementation Guide
+## Implementation Guide
 
-### Fase 1: Scoperta e Baseline (2–4 settimane)
-- Esegui Assessment Protocol su tutti i punti.
-- Definisci baseline KPI e target.
-- Coinvolgi stakeholder: Helpdesk, IT, HR, Security, Fornitori.
+### Phase 1: Discovery and Baseline (2–4 weeks)
+- Run the Assessment Protocol on all checkpoints.
+- Define baseline KPIs and targets.
+- Engage stakeholders: Helpdesk, IT, HR, Security, Vendors.
 
-### Fase 2: Progettazione e Pianificazione (2–3 settimane)
-- Prioritizza miglioramenti con RICE/WSJF.
-- Definisci roadmap, MVP, milestone e owner.
-- Stima risorse, budget, tempi.
+### Phase 2: Design and Planning (2–3 weeks)
+- Prioritize improvements with RICE/WSJF.
+- Define roadmap, MVP, milestones, and owners.
+- Estimate resources, budget, timelines.
 
-### Fase 3: Implementazione (4–12 settimane a seconda dell’ambito)
-- Configura/ottimizza ticketing (campi, SLA, workflow, automazioni).
-- Crea/modifica KB e implementa integrazione ticket.
-- Lancia self-service portal e/o chatbot su ambiti contenuti.
-- Attiva automated onboarding/offboarding con HRIS/AD.
-- Lancia programmi di training.
+### Phase 3: Implementation (4–12 weeks depending on scope)
+- Configure/optimize ticketing (fields, SLA, workflows, automations).
+- Create/modify KB and implement ticket integration.
+- Launch self-service portal and/or chatbot in limited scope.
+- Enable automated onboarding/offboarding with HRIS/AD.
+- Launch training programs.
 
-### Fase 4: Test, Pilota, Misura
-- Pilota su piccolo gruppo, raccogli feedback.
-- Monitora KPI: SLA adherence, FRT, TTR, CSAT, KB usage, time-to-prod.
-- Apprendi e itera.
+### Phase 4: Testing, Pilot, Measurement
+- Pilot with a small group, collect feedback.
+- Monitor KPIs: SLA adherence, FRT, TTR, CSAT, KB usage, time-to-prod.
+- Learn and iterate.
 
-### Fase 5: Roll-out e Governance
-- Roll-out graduale o completo a seconda dei risultati.
-- Definisci Governance: proprietari KB, review SLA, gestione ticket, change control.
-- Dashboard e report periodici.
+### Phase 5: Roll-out and Governance
+- Gradual or full roll-out based on results.
+- Define Governance: KB owners, SLA review, ticket management, change control.
+- Dashboards and periodic reports.
 
-### Fase 6: Mantenimento e Maturità
-- Audit trimestrali ITIL e processi.
-- Evoluzione KB e self-service.
-- Ottimizzazione continuo SLO/SLA in base al carico e necessità.
+### Phase 6: Maintenance and Maturity
+- Quarterly ITIL audits and process reviews.
+- KB and self-service evolution.
+- Continuous SLO/SLA optimization based on load and needs.
 
-## 🛠 Strumenti & Integrazioni Consigliati
+## Recommended Tools & Integrations
 
 - Ticketing: ServiceNow, Jira Service Management, Zendesk, Freshservice.
-- Knowledge Base: soluzione integrata al ticketing o KB dedicato (es. Confluence).
+- Knowledge Base: integrated ticketing solution or dedicated KB (e.g., Confluence).
 - SSO & Access: Azure AD, Okta, Google Workspace.
 - Asset Management: ServiceNow CMDB, Lansweeper, Snipe-IT.
-- Self-service/Portal: soluzione integrata o custom.
-- Chatbot: Soluzioni native (Zendesk Answer Bot, Freshservice Freddy) o Bot costruito su LLM con guardrails.
-- Analytics/BI: Power BI, Tableau, Looker o report nativi ticketing.
+- Self-service/Portal: integrated or custom solution.
+- Chatbot: Native solutions (Zendesk Answer Bot, Freshservice Freddy) or LLM-built bot with guardrails.
+- Analytics/BI: Power BI, Tableau, Looker or native ticketing reports.
 
-## 📊 KPI di Riferimento (target indicativi)
+## Reference KPIs (indicative targets)
 
-- SLA adherence ≥95% (SLA critiche), ≥98% (SLA alte/basse).
-- FRT <2 ore (critico), <24 ore (alto), <48 ore (medio/basso).
-- TTR <48 ore (critico), <72 ore (alto), <120 ore (medio/basso) — da aggiustare per categoria.
+- SLA adherence ≥95% (critical SLAs), ≥98% (high/low SLAs).
+- FRT <2 hours (critical), <24 hours (high), <48 hours (medium/low).
+- TTR <48 hours (critical), <72 hours (high), <120 hours (medium/low) — adjust per category.
 - CSAT ≥85% satisfied/very satisfied.
-- KB coverage ≥70% ticket con KB collegato; tasso uso auto-servizio ≥30%.
-- Onboarding attivato ≤3 giorni; offboarding revoche entro 24 ore da richiesta.
+- KB coverage ≥70% tickets with linked KB; self-service usage rate ≥30%.
+- Onboarding provisioned ≤3 days; offboarding revocations within 24 hours of request.
 
-## ⚠️ Note & Best Practices
+## Notes & Best Practices
 
-- Allineare SLA con business needs; evitare target non raggiungibili che generano insoddisfazione.
-- Mantenere KB semplice, cercabile, aggiornato; assegnare proprietario.
-- Monitorare in continuazione i trend di volume e breaching per interventi proattivi.
-- Coinvolgere gli utenti finali in test e feedback.
-- Documentare processi e responsabilità (RACI) e comunicarli chiaramente.
+- Align SLA with business needs; avoid unrealistic targets that cause dissatisfaction.
+- Keep KB simple, searchable, up-to-date; assign ownership.
+- Continuously monitor volume and breach trends for proactive intervention.
+- Involve end users in testing and feedback.
+- Document processes and responsibilities (RACI) and communicate them clearly.
 
-## 📅 Esempio di Roadmap (M3)
+## Example Roadmap (M3)
 
-- Settimana 1–2: Assessment e baseline KPI.
-- Settimana 3–4: Progettazione KB e SLA tuning.
-- Settimana 5–8: Implementazione ticketing avanzato, KB management, primo pilota chatbot.
-- Settimana 9–12: Roll-out self-service portal, onboarding automation, training program.
-- Settimana 13+: Governance, monitoraggio continuo, miglioramenti iterativi.
-
----
-*Skills correlate: [it-team-service-desk] può essere integrata con skills di [autonomous-ai-agents] per chatbot/agenti virtuali e [hermes-ops] per operazioni e cost monitoring.*
+- Week 1–2: Assessment and KPI baseline.
+- Week 3–4: KB design and SLA tuning.
+- Week 5–8: Advanced ticketing implementation, KB management, first chatbot pilot.
+- Week 9–12: Self-service portal roll-out, onboarding automation, training program.
+- Week 13+: Governance, continuous monitoring, iterative improvements.
 
 ---
 

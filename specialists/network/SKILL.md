@@ -11,164 +11,164 @@ metadata:
     related_skills: [it-team-security, it-team-cloud, it-team-os-infra]
 ---
 
-# Specialista Rete — Network Engineer (it-team-network)
+# Network Specialist — Network Engineer (it-team-network)
 
 ## Assessment Protocol
 
-Esegui una valutazione completa seguendo questa sequenza. Per ogni punto, verifica e documenta risultati, configurazioni attuali e raccomandazioni.
+Perform a complete assessment following this sequence. For each item, verify and document results, current configurations, and recommendations.
 
-### 1. Topologia Rete
-- Mappa fisica e logica (disegni Visio/Draw.io).
-- Identifica core, distribution, access layer.
-- Verifica collegamenti fibra/rame e ridondanze.
-- Documenta ISP, router BGP/edge, switch upstream.
+### 1. Network Topology
+- Physical and logical maps (Visio/Draw.io diagrams).
+- Identify core, distribution, access layers.
+- Verify fiber/copper links and redundancies.
+- Document ISP, BGP/edge routers, upstream switches.
 
 ### 2. Firewall Rules
-- Esporta regole da firewall (ASA, Palo, Forti, Cisco FTD, OPNsense).
-- Classifica regole: inbound, outbound, intra-VLAN, DMZ, verso Internet.
-- Verifica regole esplicite vs implicite (deny any any).
-- Controllo NAT/PAT e logging.
-- Rimuovi regole obsolete/duplicate/aperte a 0.0.0.0/0.
+- Export rules from firewalls (ASA, Palo, Forti, Cisco FTD, OPNsense).
+- Classify rules: inbound, outbound, intra-VLAN, DMZ, toward Internet.
+- Verify explicit vs. implicit rules (deny any any).
+- Check NAT/PAT and logging.
+- Remove obsolete/duplicate/rules open to 0.0.0.0/0.
 
 ### 3. VLAN Segmentation
-- Lista VLAN (ID, name, scopo, subnet, VLAN Gateway).
-- Verifica tagging trunk/access su switch.
-- Controllo che server/DB siano su VLAN separate da utente.
-- Verifica ACL tra VLAN (inter-VLAN routing su L3 switch/firewall).
+- VLAN list (ID, name, purpose, subnet, VLAN gateway).
+- Verify trunk/access tagging on switches.
+- Ensure servers/DBs are on VLANs separate from users.
+- Verify inter-VLAN ACLs (inter-VLAN routing on L3 switch/firewall).
 
 ### 4. Bandwidth Utilization
-- Collega NetFlow/sFlow (router, switch, firewall) a collector (ntop, SolarWinds, Plixer).
-- Report giornalieri/settimanali per volume, applicazioni, top talker.
-- Identifica picchi, congestioni, saturazione link ISP/upstream.
-- Verifica QoS in applicazione e marking DSCP.
+- Connect NetFlow/sFlow (router, switch, firewall) to collector (ntop, SolarWinds, Plixer).
+- Daily/weekly reports by volume, applications, top talker.
+- Identify peaks, congestions, ISP/upstream link saturation.
+- Verify QoS enforcement and DSCP marking.
 
 ### 5. WiFi Coverage
 - Site survey (Heatmap, RSSI, SNR, throughput). A/B testing 2.4 vs 5 GHz.
-- Verifica channel utilization, overlap, potenze TX.
-- Controllo bande Radio 11a/b/g/n/ac/ax, stesse channel su APs vicine.
-- Verifica Load Balancing, Band Steering, RRM aggressiveness.
-- Test roaming tra AP vendor.
+- Verify channel utilization, overlap, TX power.
+- Check radio bands 11a/b/g/n/ac/ax, same channels on nearby APs.
+- Verify load balancing, band steering, RRM aggressiveness.
+- Test roaming between AP vendors.
 
 ### 6. VPN Concentrator Health
-- Collaudo tunnel site-to-site (IPSec/SSL) e remote client (SSL/DTLS).
-- Verifica SA lifetime, rekey, traffic stats/errors.
-- Log congestione CPU/memoria, tunnel drops.
-- Test failover tra istanze multiple (se presenti).
+- Test site-to-site (IPSec/SSL) and remote client (SSL/DTLS) tunnels.
+- Verify SA lifetime, rekey, traffic stats/errors.
+- Log CPU/memory congestion, tunnel drops.
+- Test failover across multiple instances (if present).
 
 ### 7. DNS / DHCP Config
-- Server autoritativi (AD, BIND, Unbound) e forwarding/conditional.
-- Split-horizon DNS (interno/esterno), DNSSEC.
-- DHCP scope, reservation, option 43/66 per APs/VoIP.
-- Verifica TTL, cache, forwarding performance.
-- Controllo spoofing (DHCP snooping, IP Source Guard).
+- Authoritative servers (AD, BIND, Unbound) and forwarding/conditional.
+- Split-horizon DNS (internal/external), DNSSEC.
+- DHCP scopes, reservations, option 43/66 for APs/VoIP.
+- Verify TTL, cache, forwarding performance.
+- Check spoofing (DHCP snooping, IP Source Guard).
 
 ### 8. Device Inventory
-- Asset HW/SW: modelli, seriali, firmware, data di installazione.
-- Configurazioni correnti (backup giornaliero).
-- Licenze e maintenance/contract in scadenza.
-- Mappa MAC/porta per switch/access point.
+- HW/SW assets: models, serials, firmware, installation dates.
+- Current configurations (daily backup).
+- Licenses and maintenance/contract expirations.
+- MAC/port mapping for switches/access points.
 
 ---
 
 ## Improvement Catalog
 
-Prioritizza queste migliorie in base a rischio, costo e business impact.
+Prioritize these improvements based on risk, cost, and business impact.
 
 ### SD-WAN Migration
-- Valuta applicazioni critiche (VoIP, ERP, branch apps).
-- Scegli tra Internet+LTE/5G con bonding o MPLS supplementare.
-- Pilota su un branch, poi rollout con rollback plan.
-- Configurazione QoS, applicance/Cloud onramp (SASE opzionale).
+- Evaluate critical applications (VoIP, ERP, branch apps).
+- Choose between Internet+LTE/5G with bonding or supplementary MPLS.
+- Pilot on one branch, then rollout with rollback plan.
+- QoS configuration, appliance/Cloud onramp (optional SASE).
 
-### Network Segmentation Zero-Trust
-- Micro-segmentation con policy basate su identità (802.1X, certificati).
-- Crea VLAN/VSVR per workload sensibili.
-- Firewall a soglia L7 e ispezione TLS.
-- Estendi a cloud (Security Groups, micro-segmentation NSX/Azure NSG).
+### Zero-Trust Network Segmentation
+- Micro-segmentation with identity-based policies (802.1X, certificates).
+- Create VLANs/VSRs for sensitive workloads.
+- L7 threshold firewall and TLS inspection.
+- Extend to cloud (Security Groups, NSX/Azure NSG micro-segmentation).
 
 ### Firewall Rule Cleanup
-- Rimuovi regole aperte/permesse, inverte ordine per minimizzazione.
-- Applica principle of least privilege.
-- Usa tag/group objects per oggetti dinamici.
-- Abilita logging sulle regole critiche e quarterly review.
+- Remove open/permissive rules, reorder to minimize.
+- Apply principle of least privilege.
+- Use tag/group objects for dynamic objects.
+- Enable logging on critical rules and quarterly review.
 
 ### WiFi 6 Upgrade
-- Migrazione AP 6E/6 per maggiore densità e bassa latenza.
-- Configurazione ottimale channel/HE40/80MHz, TDLS/MU-MIMO.
-- Aggiorna firmware controller/AP.
-- Valida con user experience test (speedtest, video conferencing).
+- Migrate to 6E/6 APs for higher density and low latency.
+- Optimal channel/HE40/80MHz configuration, TDLS/MU-MIMO.
+- Update controller/AP firmware.
+- Validate with user experience tests (speedtest, video conferencing).
 
 ### Redundant ISP Setup
-- Secondo ISP con BGP/edge o semplice default route.
-- Failover automatico (BFD/stateful, floating static).
-- Separazione traffico critico/OTT su ISP primario.
-- Verifica split routing verso sedi distinte.
+- Secondary ISP with BGP/edge or simple default route.
+- Automatic failover (BFD/stateful, floating static).
+- Critical/OTT traffic separation on primary ISP.
+- Verify split routing to separate locations.
 
 ### Network Monitoring Deployment
 - Deploy NMS/PaaS (Grafana+Prometheus, Zabbix, PRTG, NetBox).
-- Alert proattivi: congestione, downtime, config drift, VPN flaps.
-- Integra NetFlow/sFlow per visibilità applicativa.
-- Dashboard SLA/top talkers e trend capacity.
+- Proactive alerts: congestion, downtime, config drift, VPN flaps.
+- Integrate NetFlow/sFlow for application visibility.
+- SLA/top talkers dashboards and capacity trend reporting.
 
 ---
 
 ## Implementation Guide
 
-Tempi di intervento indicativi. Adatta in base alle dimensioni e al vendor.
+Estimated intervention timelines. Adapt based on size and vendor.
 
-### Fase 0 – Preparazione
-- Documenta baseline (topologia, config, performance).
-- Coinvolgi change management e stakeholders.
-- Pianifica finestre di manutenzione e rollback safe.
-- Esegui backup di configurazioni critiche.
+### Phase 0 – Preparation
+- Document baseline (topology, config, performance).
+- Engage change management and stakeholders.
+- Plan maintenance windows and safe rollbacks.
+- Back up critical configurations.
 
-### Fase 1 – Monitoraggio e Visibilità
-- Installa NetFlow/sFlow su collector.
-- Configura NMS di base (discovery, grafici, allerta elementari).
-- Fissa KPI: throughput, error rate, latency, jitter, utilization >70% trigger.
+### Phase 1 – Monitoring and Visibility
+- Install NetFlow/sFlow on collector.
+- Configure basic NMS (discovery, charts, elementary alerting).
+- Set KPIs: throughput, error rate, latency, jitter, utilization >70% trigger.
 
-### Fase 2 – Sicurezza e Segmentazione
-- Pulizia firewall: regole duplicate, implicit deny, logging.
-- Abilita DHCP snooping, Dynamic ARP Inspection, IP Source Guard.
-- Crea VLAN per server/DMZ/Guest; applica ACL inter-VLAN.
-- Abilita 802.1X su porte di accesso (se switch lo supportano).
+### Phase 2 – Security and Segmentation
+- Firewall cleanup: duplicate rules, implicit deny, logging.
+- Enable DHCP snooping, Dynamic ARP Inspection, IP Source Guard.
+- Create VLANs for servers/DMZ/Guest; apply inter-VLAN ACLs.
+- Enable 802.1X on access ports (if switches support it).
 
-### Fase 3 – Ottimizzazione WiFi
-- Aggiorna firmware controller/AP.
-- Ri-survey aree critiche; aggiusta posizionamento/AP.
-- Configura band steering, airtime fairness, minimizza rumore.
-- Abilita WMM e ottimizza voice/video profiles.
+### Phase 3 – WiFi Optimization
+- Update controller/AP firmware.
+- Re-survey critical areas; adjust positioning/APs.
+- Configure band steering, airtime fairness, minimize noise.
+- Enable WMM and optimize voice/video profiles.
 
-### Fase 4 – VPN/Edge
-- Verifica SA e performance tunnel; aumenta risorse se necessarie.
-- Configura route-map/policy based routing per traffico privilegiato.
-- Se migrazione SD-WAN, pilotare su branch non critici; rollback rapido.
+### Phase 4 – VPN/Edge
+- Verify SA and tunnel performance; increase resources if needed.
+- Configure route-map/policy-based routing for privileged traffic.
+- If migrating to SD-WAN, pilot on non-critical branches; fast rollback.
 
-### Fase 5 – Migliorie Strutturali (su timeline)
-- SD-WAN: provisioning, bonding, QoS, applicance/Cloud onramp.
-- Zero Trust: integrazione identità, micro-segmentation, L7 policy.
-- Ridondanza ISP: BGP e floating static, test failover.
-- Upgrade cablaggio/switch per supportare 10 G dove necessario.
+### Phase 5 – Structural Improvements (on timeline)
+- SD-WAN: provisioning, bonding, QoS, appliance/Cloud onramp.
+- Zero Trust: identity integration, micro-segmentation, L7 policy.
+- ISP redundancy: BGP and floating static, failover testing.
+- Cabling/switch upgrades to support 10G where needed.
 
-### Fase 6 – Testing e Validation
-- Verifica reachability, performance (iperf, pathping, MTR).
+### Phase 6 – Testing and Validation
+- Verify reachability, performance (iperf, pathping, MTR).
 - Test failover (firewall, ISP, VPN).
-- Verifica QoS in condizioni di carico e simulazione falli.
-- Report delle modifiche e rollback disponibile.
+- Verify QoS under load and fault simulation.
+- Document changes and available rollbacks.
 
-### Fase 7 – Operazioni e Governance
-- Configurazioni in revisione periodica (mensile/trimestrale).
-- Aggiorna asset/report di capacity planning.
-- Formazione team operations su nuovi processi e strumenti.
-- SLA/KPI monitorati e review cicliche.
+### Phase 7 – Operations and Governance
+- Periodic configuration review (monthly/quarterly).
+- Update asset/capacity planning reports.
+- Team training on new processes and tools.
+- SLA/KPI monitoring and cyclic reviews.
 
 ---
 
-## Note Operative
-- Mantieni sempre un rollback testato per ogni cambiamento critico.
-- Usa config via test-bed prima del production.
-- Mantieni documentazione aggiornata (topologia, VLAN, oggetti firewall).
-- Per le estensioni cloud, integra security groups/NSG e private link dove applicabile.
+## Operational Notes
+- Always maintain a tested rollback for every critical change.
+- Use config via test-bed before production.
+- Keep documentation updated (topology, VLAN, firewall objects).
+- For cloud extensions, integrate security groups/NSG and private link where applicable.
 ---
 
 ## Output Contract
@@ -201,4 +201,4 @@ All specialist assessments produce structured deliverables:
 - Comply with GDPR, HIPAA, SOX, and local regulations where applicable.
 - Data retention follows organization retention schedule; dispose per policy.
 
-- Valuta SASE/SD-WAN con zero trust integrato per ambienti distribuiti/multi-cloud.
+- Evaluate SASE/SD-WAN with integrated zero trust for distributed/multi-cloud environments.

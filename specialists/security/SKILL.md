@@ -11,34 +11,34 @@ metadata:
     related_skills: [it-team-network, it-team-os-infra, it-team-data]
 ---
 
-# Specialista Sicurezza — CISO / Security Engineer
+# Security Specialist — CISO / Security Engineer
 
-Dominio: cybersecurity, compliance (GDPR, ISO 27001, NIST CSF), threat detection, incident response, vulnerability management, identity protection, security monitoring (SIEM/SOAR), security awareness.
+Domain: cybersecurity, compliance (GDPR, ISO 27001, NIST CSF), threat detection, incident response, vulnerability management, identity protection, security monitoring (SIEM/SOAR), security awareness.
 
 ## Assessment Protocol
 
-### Cosa Controllare
+### What to Check
 
-**Policies e Governance**
-- Policy di sicurezza documentate?
-- Data breach procedure documentata?
-- Incident response plan (IRP) aggiornato?
+**Policies and Governance**
+- Security policies documented?
+- Data breach procedure documented?
+- Incident response plan (IRP) updated?
 - Business continuity plan (BCP)?
-- DPO nominato? (obbligatorio GDPR)
-- Registro trattamenti dati (ROPA) aggiornato?
-- Certificazioni: ISO 27001? SOC2? Cyber Essentials?
+- DPO appointed? (mandatory under GDPR)
+- Records of Processing Activities (ROPA) updated?
+- Certifications: ISO 27001? SOC2? Cyber Essentials?
 
 **Technical Controls**
-- Antivirus/EDR: marca? Copertura 100%? (Defender/CrowdStrike/SentinelOne)
-- Firewall: perimetrale e interno? (Fortinet/PaloAlto/Sophos)
-- MFA: attivo su admin? Utenti? VPN? Cloud?
+- Antivirus/EDR: brand? 100% coverage? (Defender/CrowdStrike/SentinelOne)
+- Firewall: perimeter and internal? (Fortinet/PaloAlto/Sophos)
+- MFA: enabled on admin? Users? VPN? Cloud?
 - Patch management: timeframe? (critical: 48h? monthly?)
-- Vulnerability scanning: frequenza? Strumento? (Tenable/Qualys/Nessus)
-- Penetration test: ultimo? Frequenza? Risultati?
-- Backup encryption: at-rest? In-transit? Testati?
+- Vulnerability scanning: frequency? Tool? (Tenable/Qualys/Nessus)
+- Penetration test: last conducted? Frequency? Results?
+- Backup encryption: at-rest? In-transit? Tested?
 
 **Identity Protection**
-- MFA adoption rate (admin: utenti %)
+- MFA adoption rate (admin / user %)
 - Conditional Access / Zero-trust policies?
 - Privileged Identity Management (PIM)?
 - Just-In-Time access?
@@ -46,26 +46,26 @@ Dominio: cybersecurity, compliance (GDPR, ISO 27001, NIST CSF), threat detection
 - Passwordless adoption?
 
 **Monitoring & Detection**
-- SIEM: presente? (Splunk/Sentinel/Wazuh/QRadar)
+- SIEM: present? (Splunk/Sentinel/Wazuh/QRadar)
 - SOAR: automation playbook?
 - Log retention period?
 - Threat intelligence feed?
 - UEBA / User behavior analytics?
-- Incident detection: tempo medio (MTTD)?
+- Incident detection: mean time to detect (MTTD)?
 
 **Security Awareness**
-- Training periodico per utenti?
+- Periodic user training?
 - Phishing simulation?
-- Policy di sicurezza accettazione utente?
-- Reporting channel per incidenti?
+- User security policy acceptance?
+- Incident reporting channel?
 
-### Metriche Chiave
+### Key Metrics
 
-| Metrica | Target | Come Misurare |
+| Metric | Target | How to Measure |
 |---------|--------|---------------|
 | MFA adoption | 100% admin, > 80% users | MFA report |
 | Patch critical | < 48h | Patch compliance report |
-| Vulnerability fix | > 95% critical in 30gg | Vulnerability scanner |
+| Vulnerability fix | > 95% critical in 30 days | Vulnerability scanner |
 | Backup test pass | 100% | Backup report |
 | Phishing click rate | < 5% | Phishing simulation report |
 | MTTD (time to detect) | < 24h | SIEM dashboard |
@@ -73,62 +73,62 @@ Dominio: cybersecurity, compliance (GDPR, ISO 27001, NIST CSF), threat detection
 
 ## Improvement Catalog
 
-### Quick Wins (<= 2 settimane)
+### Quick Wins (<= 2 weeks)
 
-| # | AZIONE | IMPATTO | SFORZO | PRIORITA |
+| # | ACTION | IMPACT | EFFORT | PRIORITY |
 |---|--------|---------|--------|----------|
 | 1 | Enable MFA on ALL admin accounts | CRITICAL | 2h | 1 |
-| 2 | Run vulnerability scan full environment | HIGH | 4h | 2 |
+| 2 | Run full environment vulnerability scan | HIGH | 4h | 2 |
 | 3 | Enable backup encryption if not active | HIGH | 2h | 2 |
 | 4 | Verify backup restore with test file | HIGH | 2h | 3 |
-| 5 | Cleanup inactive users/disabling old accounts | HIGH | 4h | 1 |
+| 5 | Cleanup inactive users/disable old accounts | HIGH | 4h | 1 |
 | 6 | Set up basic log retention & alerting | HIGH | 8h | 2 |
 | 7 | Create/update incident response contact list | HIGH | 2h | 1 |
 | 8 | Enable Conditional Access basic policies | HIGH | 4h | 2 |
 
-### Migliorie Strategiche (1-6 mesi)
+### Strategic Improvements (1-6 months)
 
 **1. Incident Response Plan**
-Crea/aggiorna IRP con fasi: Preparation, Detection, Containment, Eradication, Recovery, Lessons Learned.
-Include: playbook per ransomware, data breach, DDoS, account compromise.
-Effort: 2-3 settimane
+Create/update IRP with phases: Preparation, Detection, Containment, Eradication, Recovery, Lessons Learned.
+Include: playbooks for ransomware, data breach, DDoS, account compromise.
+Effort: 2-3 weeks
 
 **2. SIEM Deployment (Wazuh/FOSS)**
-Wazuh gratuito (FOSS). Copre: log collection, file integrity, vulnerability detection, alerts.
-Architettura: Wazuh server + agents su tutti i server.
-Costo: €0 software, solo infrastruttura server.
-Effort: 3-4 settimane
+Wazuh is free (FOSS). Covers: log collection, file integrity, vulnerability detection, alerts.
+Architecture: Wazuh server + agents on all servers.
+Cost: €0 software, server infrastructure only.
+Effort: 3-4 weeks
 
 **3. Vulnerability Management Program**
-Processo continuo: scan settimanale, remediation entro SLA, reporting mensile.
-Fase 1: scan con Nessus/OpenVAS (gratuito).
-Fase 2: remediation workflow.
-Fase 3: reporting al management.
-Effort: 2-3 settimane iniziali, continuo poi
+Continuous process: weekly scans, remediation within SLA, monthly reporting.
+Phase 1: scan with Nessus/OpenVAS (free).
+Phase 2: remediation workflow.
+Phase 3: management reporting.
+Effort: 2-3 initial weeks, then ongoing
 
 **4. Zero-Trust Architecture**
-Principi: verify explicitly, least privilege, assume breach.
-Azioni:
+Principles: verify explicitly, least privilege, assume breach.
+Actions:
 - Network segmentation (micro-segmentation)
 - MFA everywhere
 - Conditional Access policies
-- Just-In-Time access per admin
+- Just-In-Time access for admins
 - Device compliance check (Intune)
-Effort: 4-8 settimane
+Effort: 4-8 weeks
 
 **5. Security Awareness Program**
-Training base per tutti gli utenti + phishing simulation trimestrale.
-Strumenti gratuiti: GoPhish (phishing simulation) + LMS open source (es. Moodle).
-Effort: 2 settimane setup, continuo
+Basic training for all users + quarterly phishing simulation.
+Free tools: GoPhish (phishing simulation) + open-source LMS (e.g., Moodle).
+Effort: 2 weeks setup, then ongoing
 
 **6. GDPR Compliance Project**
-Se azienda tratta dati di cittadini UE:
-- DPO nomination (se > 250 dipendenti o dati sensibili)
-- ROPA (Registro Trattamenti)
+If the company processes EU citizens' data:
+- DPO appointment (if > 250 employees or sensitive data)
+- ROPA (Records of Processing Activities)
 - Data breach procedure
 - Data retention & deletion policy
-- DPIA (Data Protection Impact Assessment) per nuovi trattamenti
-Effort: 4-6 settimane (dipende da compliance attuale)
+- DPIA (Data Protection Impact Assessment) for new processing activities
+Effort: 4-6 weeks (depends on current compliance state)
 
 ## Implementation Guide
 
@@ -136,7 +136,7 @@ Effort: 4-6 settimane (dipende da compliance attuale)
 
 ```
 1. Identity pillar
-   - MFA su tutti gli account
+   - MFA on all accounts
    - Conditional Access policies (block legacy auth, location-based)
    - PIM for admin roles
    - Passwordless (Windows Hello / Authenticator)
@@ -162,9 +162,9 @@ Effort: 4-6 settimane (dipende da compliance attuale)
    - Automated response (SOAR playbook)
 ```
 
-### Tool Gratuiti Raccomandati
+### Recommended Free Tools
 
-| Strumento | Uso | Licenza |
+| Tool | Use | License |
 |-----------|-----|---------|
 | Wazuh | SIEM/XDR | Open source (AGPL) |
 | OpenVAS / Greenbone | Vulnerability scanner | Open source (GPL) |
@@ -174,15 +174,15 @@ Effort: 4-6 settimane (dipende da compliance attuale)
 | Security Onion | SOC platform | Open source (GPL) |
 | CrowdSec | IPS/CTI community-based | Open source (MIT) |
 
-### Errori Comuni
+### Common Errors
 
-1. **MFA solo parziale** - attivarlo solo sugli admin e dimenticare servizi critici (VPN, cloud, email). MFA su tutto.
-2. **Patch solo quando esplode** - vulnerability window lasciata aperta. Patch critical entro 48h.
-3. **Backup non testati** - il backup esiste ma il restore non funziona. Test mensile obbligatorio.
-4. **Security awareness ignorata** - l'anello piu debole resta l'utente. Training + phishing simulation.
-5. **Log senza retention** - log accesi ma retention 7gg. Minimo 90gg, 1 anno per compliance.
-6. **IR plan inesistente** - quando succede, si improvvisa. Playbook da scrivere prima.
-7. **Password manager non usato** - password copiate sticky note. Bitwarden/KeePass obbligatorio.
+1. **Partial MFA** — enabling it only on admins and forgetting critical services (VPN, cloud, email). MFA everywhere.
+2. **Patching only when things break** — vulnerability window left open. Critical patches within 48h.
+3. **Untested backups** — backup exists but restore doesn't work. Monthly restore testing mandatory.
+4. **Ignored security awareness** — the weakest link remains the user. Training + phishing simulation.
+5. **Logs without retention** — logs enabled but 7-day retention. Minimum 90 days, 1 year for compliance.
+6. **Non-existent IR plan** — when it happens, improvisation. Playbook must be written beforehand.
+7. **Password manager not used** — passwords copied to sticky notes. Bitwarden/KeePass mandatory.
 ---
 
 ## Output Contract
