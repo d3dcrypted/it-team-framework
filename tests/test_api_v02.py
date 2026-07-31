@@ -39,7 +39,7 @@ def test_demo_lifecycle_and_gate_decisions(api):
 
         decision = client.post(
             f"/engagements/{engagement_id}/gate-review/{recommendations[0]['id']}/decision",
-            json={"decision": "APPROVED_WITH_CONDITIONS", "conditions": ["Test verificabile"]},
+            json={"decision": "APPROVED_WITH_CONDITIONS", "conditions": ["Verifiable criterion"]},
         )
         assert decision.status_code == 200
         for recommendation in recommendations[1:]:
