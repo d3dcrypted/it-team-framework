@@ -2,7 +2,7 @@
 name: it-team-service-desk
 description: 'Use when assessing or improving IT service desk operations. ITIL processes + ticketing + SLA management + knowledge base + user training.'
 category: service-desk
-version: 1.0.0
+version: 0.2.0
 author: d3d
 license: MIT
 metadata:
@@ -204,7 +204,7 @@ All specialist assessments produce structured deliverables:
 | **HIGH** | Significant impact; degrades service or increases risk | Action within 30 days |
 | **MEDIUM** | Moderate impact; optimization or compliance gap | Plan within 90 days |
 | **LOW** | Minor improvement opportunity | Backlog |
-| **Info** | Observation, best practice, or FYI | Documented |
+
 
 ## Privacy & Data Handling
 

@@ -17,10 +17,10 @@ Tutte le modifiche rilevanti del progetto sono registrate in questo file.
 - Standardizzato il riferimento ai domini Identity & Access e Data, Backup & DR.
 - Aggiunta la regola di re-gate quando un’azione cambia durante l’execution.
 
-### Not yet implemented
+### API and validation
 
-- API ancora in modalità demo con raccomandazioni simulate.
-- Test runtime FastAPI non ancora inclusi in questa release.
-- Integrazione reale con Hermes ancora da implementare.
+- API demo resa deterministica con macchina a stati, decisioni gatekeeper a quattro esiti, idempotenza e gestione coerente degli errori.
+- Aggiunti test automatici del lifecycle API e use case Alfa Logistica.
+- Integrazione reale con Hermes ancora da implementare; la modalità demo resta esplicita.
 
 [0.2.0]: https://semver.org/
