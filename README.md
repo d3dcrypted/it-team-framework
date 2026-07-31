@@ -148,7 +148,7 @@ uvicorn server:app --host 127.0.0.1 --port 8080   # da api/
 
 Endpoint principali: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/execute`, `GET /health`.
 
-L'API non ha autenticazione di default: impostare `IT_TEAM_API_KEY` per richiedere un Bearer token, e non esporla su interfacce pubbliche.
+L'API richiede `IT_TEAM_API_KEY` quando `IT_TEAM_MODE=production`; in modalità `demo` è pensata solo per uso locale. Non esporre l'API direttamente su Internet: usare un reverse proxy TLS, autenticazione e rete privata. I modelli presenti nel database iniziale sono seed dimostrativi e vanno sostituiti o aggiornati in base al provider scelto.
 
 ## Versioning
 

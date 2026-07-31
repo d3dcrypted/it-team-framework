@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- MIT license, portable systemd service template, CI workflow and tracked-file secret scan for public distribution.
+
+### Changed
+
+- Updated API security guidance for production mode and marked model records as demonstration seeds.
+
 Tutte le modifiche rilevanti del progetto sono registrate in questo file.
 
 ## [0.2.0] - 2026-07-31
