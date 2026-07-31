@@ -160,6 +160,12 @@ Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /enga
 
 The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`; in `demo` mode it is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
 
+## Contributing
+
+Repository workflow, branch naming, pull requests, validation, commit messages, and release rules are documented in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+`main` is the protected, releasable branch. Changes must be developed on a short-lived branch and merged through a pull request after CI passes.
+
 ## Versioning
 
 The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`). The current version is in `VERSION`.

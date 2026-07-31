@@ -5,6 +5,7 @@
 ### Added
 
 - MIT license, portable systemd service template, CI workflow and tracked-file secret scan for public distribution.
+- Contributor workflow defining branch naming, pull requests, validation, and release rules.
 
 ### Changed
 
