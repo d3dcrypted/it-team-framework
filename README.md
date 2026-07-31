@@ -57,7 +57,9 @@ it-team-framework/
 ├── assessment/
 │   └── interview-guide.md    # Interview guide for initial assessment
 ├── docs/
-│   └── model-budget-analysis.md # AI model budget analysis
+│   ├── configuration.md           # API, secrets, providers, and budget profiles
+│   ├── deployment-architecture.md # Filesystem layout and operating model
+│   └── model-budget-analysis.md   # Historical AI model budget analysis
 └── scripts/
     ├── deploy-skills.sh      # Install all skills in Hermes
     └── new-engagement.sh     # Start a new engagement
@@ -135,6 +137,14 @@ hermes chat -q "Load skill it-team-orchestrator. New engagement for a 100-employ
 # 3. Once the roadmap is approved, execute:
 hermes chat -q "Execute phase 1 of the roadmap: upgrade AD to Azure AD Connect and backup automation"
 ```
+
+## Configuration and deployment
+
+The API configuration, required and optional environment variables, local secret handling, production deployment guidance, and budget profiles are documented in [`docs/configuration.md`](docs/configuration.md).
+
+For the complete filesystem layout, component placement, permissions, systemd deployment, data boundaries, and end-to-end operating workflow, read [`docs/deployment-architecture.md`](docs/deployment-architecture.md).
+
+The model IDs shown in examples are replaceable seeds, not mandatory dependencies. Select cloud or local providers according to privacy, data residency, quality, latency, availability, and budget requirements.
 
 ## Management API (Optional)
 

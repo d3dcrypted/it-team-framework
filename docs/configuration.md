@@ -94,7 +94,7 @@ There is no mandatory default combination. Choose and document the combination t
 - Back up the SQLite database and test restoration before treating it as authoritative data.
 - Do not store personal vault content, Honcho data, private notes, credentials or infrastructure secrets in this standalone project.
 
-See `api/it-team-api.service` for a portable systemd template and `README.md` for the quick-start workflow.
+See `api/it-team-api.service` for a portable systemd template, [`deployment-architecture.md`](deployment-architecture.md) for the complete placement and operating model, and `README.md` for the quick-start workflow.
 
 ## Configuration checklist
 
