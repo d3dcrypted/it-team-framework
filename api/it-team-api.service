@@ -1,0 +1,20 @@
+[Unit]
+Description=IT Team Framework API Server
+After=network.target
+
+[Service]
+Type=simple
+User=d3d
+WorkingDirectory=/home/d3d/it-team-framework/api
+# Bind su localhost: esporre su 0.0.0.0 solo dietro reverse proxy con TLS
+ExecStart=/usr/bin/python3 -m uvicorn server:app --host 127.0.0.1 --port 8080
+# Auth: decommentare e impostare una chiave per proteggere l'API
+#Environment=IT_TEAM_API_KEY=changeme
+#Environment=IT_TEAM_DB_PATH=/home/d3d/it-team-framework/api/it_team.db
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
