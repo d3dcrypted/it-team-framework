@@ -114,6 +114,35 @@ def init_db():
         FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
     )""")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_recommendations_engagement ON recommendations(engagement_id)")
+    # v0.3.1 P1: append-only audit trail of every state transition (immutable).
+    cur.execute("""CREATE TABLE IF NOT EXISTS state_transitions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        engagement_id INTEGER NOT NULL,
+        from_state TEXT,
+        to_state TEXT NOT NULL,
+        changed_at TEXT NOT NULL,
+        changed_by TEXT NOT NULL DEFAULT 'system',
+        FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
+    )""")
+    # v0.3.1 P1: action dependency graph (blocks[]). An action cannot start until predecessors COMPLETED.
+    cur.execute("""CREATE TABLE IF NOT EXISTS action_dependencies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        engagement_id INTEGER NOT NULL,
+        action_id TEXT NOT NULL,
+        depends_on TEXT NOT NULL,
+        FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
+    )""")
+    # v0.3.1 P1: independent validator verdict, required before COMPLETED.
+    cur.execute("""CREATE TABLE IF NOT EXISTS validator_verdicts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        engagement_id INTEGER NOT NULL,
+        verdict TEXT NOT NULL,
+        validator_agent TEXT NOT NULL,
+        executor_agent TEXT,
+        evidence_ref TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
+    )""")
     cur.execute("""CREATE TABLE IF NOT EXISTS models (
         name TEXT PRIMARY KEY,
         cost_input_per_1m REAL NOT NULL,
@@ -122,8 +151,9 @@ def init_db():
     if cur.execute("SELECT COUNT(*) AS cnt FROM models").fetchone()["cnt"] == 0:
         cur.executemany(
             "INSERT INTO models VALUES (?,?,?)",
-            # Demonstration seeds only; replace with the operator's provider/model catalog.
-            [("openai/gpt-5.6-luna", 0.70, 0.70), ("xiaomi/mimo-v2.5", 0.42, 0.42)],
+            # Demonstration seeds only — placeholder names, replace with the
+            # operator's catalog. Do NOT pin explicit OpenRouter model IDs here.
+            [("demo-orchestrator-model", 0.70, 0.70), ("demo-worker-model", 0.42, 0.42)],
         )
     conn.commit()
     conn.close()
@@ -186,7 +216,7 @@ def get_engagement(eng_id: int):
     return row
 
 
-def set_status(eng_id: int, new_status: str):
+def set_status(eng_id: int, new_status: str, changed_by: str = "system"):
     if new_status not in VALID_STATUSES:
         raise ValueError(f"Invalid status: {new_status}")
     conn = get_conn()
@@ -198,6 +228,14 @@ def set_status(eng_id: int, new_status: str):
     if new_status != current and new_status not in TRANSITIONS.get(current, set()):
         conn.close()
         raise HTTPException(status_code=409, detail=f"Invalid transition: {current} -> {new_status}")
+    if new_status == current:
+        conn.close()  # ponytail: idempotent no-op, no audit row for non-transitions
+        return
+    # v0.3.1 P1: append-only audit trail. Never UPDATE/DELETE these rows.
+    conn.execute(
+        "INSERT INTO state_transitions (engagement_id, from_state, to_state, changed_at, changed_by) VALUES (?,?,?,?,?)",
+        (eng_id, current, new_status, datetime.now(timezone.utc).isoformat(), changed_by),
+    )
     conn.execute("UPDATE engagements SET status = ? WHERE id = ?", (new_status, eng_id))
     conn.commit()
     conn.close()
@@ -343,8 +381,10 @@ def execute_improvement(eng_id: int, background: BackgroundTasks):
     def task():
         try:
             if MODE != "demo":
-                raise RuntimeError("Hermes adapter not implemented in v0.2")
-            set_status(eng_id, "completed")
+                raise RuntimeError("Hermes adapter not implemented")
+            # v0.3.1 P1: no auto-COMPLETED. The orchestrator must record a
+            # VALIDATED verdict from it-team-validator before completion.
+            set_status(eng_id, "executing")
         except Exception:
             logger.exception("Execution failed for engagement %s", eng_id)
             try:
@@ -354,6 +394,84 @@ def execute_improvement(eng_id: int, background: BackgroundTasks):
 
     background.add_task(task)
     return {"message": "Execution started", "mode": MODE}
+
+
+class ValidatorVerdictBody(BaseModel):
+    """Independent validator verdict — required before COMPLETED (v0.3.1 P1)."""
+    engagement_id: int
+    verdict: str  # VALIDATED | REJECTED | EVIDENCE_INSUFFICIENT
+    validator_agent: str
+    executor_agent: Optional[str] = None
+    evidence_ref: Optional[str] = None
+
+
+class DependencyBody(BaseModel):
+    """Action dependency graph entry (v0.3.1 P1)."""
+    action_id: str
+    depends_on: List[str] = Field(default_factory=list)
+
+
+@app.post("/engagements/{eng_id}/validator-verdict", status_code=201)
+def record_validator_verdict(eng_id: int, body: ValidatorVerdictBody):
+    get_engagement(eng_id)
+    if body.verdict not in {"VALIDATED", "REJECTED", "EVIDENCE_INSUFFICIENT"}:
+        raise HTTPException(status_code=422, detail="verdict must be VALIDATED|REJECTED|EVIDENCE_INSUFFICIENT")
+    if body.validator_agent == body.executor_agent:
+        raise HTTPException(status_code=409, detail="Self-validation is void: validator_agent must differ from executor_agent")
+    conn = get_conn()
+    conn.execute(
+        "INSERT INTO validator_verdicts (engagement_id, verdict, validator_agent, executor_agent, evidence_ref, created_at) VALUES (?,?,?,?,?,?)",
+        (eng_id, body.verdict, body.validator_agent, body.executor_agent, body.evidence_ref,
+         datetime.now(timezone.utc).isoformat()),
+    )
+    conn.commit()
+    conn.close()
+    return {"message": "Verdict recorded", "verdict": body.verdict}
+
+
+@app.post("/engagements/{eng_id}/dependencies")
+def set_dependencies(eng_id: int, body: List[DependencyBody]):
+    get_engagement(eng_id)
+    conn = get_conn()
+    conn.execute("DELETE FROM action_dependencies WHERE engagement_id = ?", (eng_id,))
+    for dep in body:
+        for pred in dep.depends_on:
+            conn.execute(
+                "INSERT INTO action_dependencies (engagement_id, action_id, depends_on) VALUES (?,?,?)",
+                (eng_id, dep.action_id, pred),
+            )
+    conn.commit()
+    conn.close()
+    return {"message": "Dependencies recorded", "count": sum(len(d.depends_on) for d in body)}
+
+
+@app.post("/engagements/{eng_id}/complete", status_code=200)
+def complete_engagement(eng_id: int):
+    """v0.3.1 P1: COMPLETED reachable ONLY from a VALIDATED verdict."""
+    get_engagement(eng_id)
+    conn = get_conn()
+    verdict = conn.execute(
+        "SELECT verdict FROM validator_verdicts WHERE engagement_id = ? ORDER BY id DESC LIMIT 1",
+        (eng_id,),
+    ).fetchone()
+    if not verdict or verdict["verdict"] != "VALIDATED":
+        conn.close()
+        raise HTTPException(status_code=409, detail="COMPLETED requires a VALIDATED verdict from it-team-validator")
+    set_status(eng_id, "completed", changed_by="it-team-validator")
+    conn.close()
+    return {"message": "Engagement completed", "status": "completed"}
+
+
+@app.get("/engagements/{eng_id}/audit-trail")
+def get_audit_trail(eng_id: int):
+    get_engagement(eng_id)
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT id, from_state, to_state, changed_at, changed_by FROM state_transitions WHERE engagement_id = ? ORDER BY id",
+        (eng_id,),
+    ).fetchall()
+    conn.close()
+    return {"audit_trail": [dict(r) for r in rows]}
 
 
 @app.get("/models", response_model=List[ModelOut])
@@ -370,9 +488,9 @@ def health_check():
         conn = get_conn()
         conn.execute("SELECT 1")
         conn.close()
-        return {"status": "ok", "mode": MODE, "version": "0.2.0"}
+        return {"status": "ok", "mode": MODE, "version": "0.3.1"}
     except sqlite3.Error:
-        return {"status": "degraded", "mode": MODE, "version": "0.2.0"}
+        return {"status": "degraded", "mode": MODE, "version": "0.3.1"}
 
 
 # Run via: uvicorn server:app --host 127.0.0.1 --port 8080

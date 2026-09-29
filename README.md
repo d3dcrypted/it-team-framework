@@ -1,6 +1,6 @@
 # IT Team Framework
 
-Multi-agent framework for corporate IT departments. A complete IT team as a set of specialized AI agents, orchestrated by an artificial CTO/IT Manager.
+Multi-agent framework for corporate IT departments. A complete IT team as a set of specialized AI agents, orchestrated by an artificial CTO/IT Manager. v0.3: 13 domain specialists, a security gatekeeper (pre-execution risk review), and an independent technical validator (evidence-based post-execution verification) — sized for medium-to-large organizations.
 
 ## Philosophy
 
@@ -25,7 +25,7 @@ An IT department is not just technical skills — it is assessment, planning, ex
 └──────┬──────────────┬──────────────┬─────────────┘
        │              │              │
   ┌────▼──┐     ┌─────▼─────┐    ┌──▼──────┐
-  │OS/Infra│     │ Security  │    │  Cloud  │  ... 9 specialists
+  │OS/Infra│     │ Security  │    │  Cloud  │  ... 13 specialists
   │Agent   │     │Gatekeeper │    │  Agent  │
   └────────┘     │(approve/  │    └─────────┘
                  │ deny rec) │
@@ -48,7 +48,13 @@ it-team-framework/
 │   ├── data/SKILL.md         # Storage, backup, DR, analytics
 │   ├── budget/SKILL.md       # Budget, licensing, vendor, procurement
 │   ├── endpoints/SKILL.md    # Workstations, mobile, MDM, printers
-│   └── service-desk/SKILL.md # Helpdesk, ticketing, user training
+│   ├── service-desk/SKILL.md # Helpdesk, ticketing, user training
+│   ├── identity-access/SKILL.md   # IAM, MFA, PAM, JML lifecycle (v0.3)
+│   ├── observability/SKILL.md     # Monitoring, logging, alerting, SLOs (v0.3)
+│   ├── ai-automation/SKILL.md     # AI adoption, RPA, AI governance (v0.3)
+│   └── devops-platform/SKILL.md   # CI/CD, IaC, containers, DORA (v0.3)
+├── validator/
+│   └── SKILL.md              # Independent technical validator (v0.3)
 ├── gatekeeper/
 │   └── SKILL.md              # Security Gatekeeper (review/approve/deny)
 ├── api/

@@ -23,7 +23,7 @@ The repository is a standalone project. It must not read from or persist data in
 +---------------------------+
 | IT Team Framework skills  |
 | orchestrator              |
-| 9 specialist skills       |
+| 13 specialist skills      |
 | security gatekeeper       |
 +-------------+-------------+
               |
@@ -66,7 +66,7 @@ Use separate paths for source code, Hermes runtime skills, secrets, and operatio
 ├── skills/
 │   ├── it-team-orchestrator/SKILL.md
 │   ├── it-team-gatekeeper/SKILL.md
-│   ├── it-team-assessment-guide/SKILL.md
+│   ├── it-team-interview-guide/SKILL.md
 │   └── it-team-*/SKILL.md                      # specialist skills
 └── .env                                        # provider secrets, mode 0600
 

@@ -2,7 +2,7 @@
 name: it-team-applications
 description: 'Use when assessing or improving enterprise applications portfolio. App rationalization + integration patterns + lifecycle management.'
 category: applications
-version: 0.2.0
+version: 0.3.0
 author: d3d
 license: MIT
 metadata:
@@ -147,14 +147,9 @@ All specialist assessments produce structured deliverables:
 | Recommendations Backlog | Prioritized list (impact × effort) | Project team |
 | Metrics Dashboard | KPI values vs. targets | Ongoing governance |
 
-## Severity Levels
+## Framework Contract (v0.3)
 
-| Level | Definition | SLA |
-|---|---|---|
-| **CRITICAL** | Immediate risk to operations, data, or compliance | Action within 48 h |
-| **HIGH** | Significant impact; degrades service or increases risk | Action within 30 days |
-| **MEDIUM** | Moderate impact; optimization or compliance gap | Plan within 90 days |
-| **LOW** | Minor improvement opportunity | Backlog |
+This skill follows the shared it-team contract defined in `orchestrator/SKILL.md` — the single source of truth for: severity enum and SLAs (`CRITICAL`/`HIGH`/`MEDIUM`/`LOW`), assessment report JSON schema, canonical domain names, execution states, and evidence rules. Do not redefine those here; if any local text conflicts with the orchestrator contract, the orchestrator contract wins.
 
 
 ## Privacy & Data Handling
