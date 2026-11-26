@@ -1,6 +1,7 @@
 import importlib
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -55,7 +56,42 @@ def test_demo_lifecycle_and_gate_decisions(api):
 
         execution = client.post(f"/engagements/{engagement_id}/execute")
         assert execution.status_code == 202
+        assert client.get(f"/engagements/{engagement_id}").json()["status"] == "executing"
+
+        # v0.3.1: the execute path no longer auto-completes; COMPLETED needs a VALIDATED verdict.
+        premature = client.post(f"/engagements/{engagement_id}/complete")
+        assert premature.status_code == 409
+
+        self_validation = client.post(
+            f"/engagements/{engagement_id}/validator-verdict",
+            json={
+                "engagement_id": engagement_id,
+                "verdict": "VALIDATED",
+                "validator_agent": "it-team-validator",
+                "executor_agent": "it-team-validator",
+            },
+        )
+        assert self_validation.status_code == 409
+
+        verdict = client.post(
+            f"/engagements/{engagement_id}/validator-verdict",
+            json={
+                "engagement_id": engagement_id,
+                "verdict": "VALIDATED",
+                "validator_agent": "it-team-validator",
+                "executor_agent": "it-team-orchestrator",
+                "evidence_ref": "synthetic-evidence",
+            },
+        )
+        assert verdict.status_code == 201
+
+        completed = client.post(f"/engagements/{engagement_id}/complete")
+        assert completed.status_code == 200
         assert client.get(f"/engagements/{engagement_id}").json()["status"] == "completed"
+
+        trail = client.get(f"/engagements/{engagement_id}/audit-trail").json()["audit_trail"]
+        assert [entry["to_state"] for entry in trail][-1] == "completed"
+        assert trail[-1]["changed_by"] == "it-team-validator"
 
 
 def test_gate_decision_requires_reason_or_conditions(api):
@@ -90,4 +126,5 @@ def test_health_is_available(api):
     with TestClient(api.app) as client:
         health = client.get("/health").json()
         assert health["status"] == "ok"
-        assert health["version"] == "0.2.0"
+        # The version has one source of truth: the VERSION file.
+        assert health["version"] == (Path(__file__).resolve().parents[1] / "VERSION").read_text(encoding="utf-8").strip()

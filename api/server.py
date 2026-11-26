@@ -1,7 +1,7 @@
-"""IT Team Framework API v0.2.
+"""IT Team Framework API.
 
-The API is intentionally demo-only in v0.2: assessment and execution use
-synthetic data. Hermes integration must be implemented as a separate adapter.
+The API is intentionally demo-only: assessment and execution use synthetic
+data. Hermes integration must be implemented as a separate adapter.
 """
 
 import logging
@@ -10,6 +10,7 @@ import sqlite3
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from enum import Enum
+from pathlib import Path
 from typing import List, Optional
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
@@ -26,6 +27,8 @@ DB_PATH = os.environ.get(
 )
 API_KEY = os.environ.get("IT_TEAM_API_KEY")
 MODE = os.environ.get("IT_TEAM_MODE", "demo").lower()
+# Single source of truth for the version: the VERSION file at the repo root.
+VERSION = (Path(__file__).resolve().parents[1] / "VERSION").read_text(encoding="utf-8").strip()
 VALID_STATUSES = {
     "created", "assessing", "assessed", "gate_review", "roadmap_ready",
     "approved", "executing", "completed", "assessment_failed", "execution_failed",
@@ -72,7 +75,7 @@ def require_api_key(
 
 
 cors_origins = [x.strip() for x in os.environ.get("IT_TEAM_CORS_ORIGINS", "").split(",") if x.strip()]
-app = FastAPI(title="IT Team Framework API", version="0.2.0", lifespan=lifespan,
+app = FastAPI(title="IT Team Framework API", version=VERSION, lifespan=lifespan,
               dependencies=[Depends(require_api_key)])
 if cors_origins:
     app.add_middleware(
@@ -488,9 +491,9 @@ def health_check():
         conn = get_conn()
         conn.execute("SELECT 1")
         conn.close()
-        return {"status": "ok", "mode": MODE, "version": "0.3.1"}
+        return {"status": "ok", "mode": MODE, "version": VERSION}
     except sqlite3.Error:
-        return {"status": "degraded", "mode": MODE, "version": "0.3.1"}
+        return {"status": "degraded", "mode": MODE, "version": VERSION}
 
 
 # Run via: uvicorn server:app --host 127.0.0.1 --port 8080

@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [0.3.2] - 2026-11-26
+
+### Fixed
+
+- **CI was red on the v0.3.1 commit.** `tests/test_api_v02.py` still asserted the pre-0.3.1 contract (auto-`completed` after `execute`, `version == "0.2.0"`). The lifecycle test now walks the validation gate end to end: `executing` after `execute`, 409 on `complete` without a verdict, 409 on self-validation, `completed` only after a `VALIDATED` verdict, and the audit trail records the transition.
+- **Version drift removed.** `api/server.py` reads the repo-root `VERSION` file for both the FastAPI app version and `/health`, instead of two hand-edited copies plus the test's third copy.
+- **Public tree carries no personal identity.** Skill frontmatter uses `author: Hermes Agent`, the LICENSE holder is the public handle, and `model-strategy.md` no longer ships an unrendered `$(date)`/personal line.
 
 ### Changed
 
