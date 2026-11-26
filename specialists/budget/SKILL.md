@@ -3,7 +3,7 @@ name: it-team-budget
 description: 'Use when assessing or improving IT budget, licensing, and procurement. Budget planning + vendor management + licensing optimization + TCO analysis.'
 category: budget-procurement
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

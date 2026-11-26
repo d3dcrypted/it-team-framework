@@ -3,7 +3,7 @@ name: it-team-applications
 description: 'Use when assessing or improving enterprise applications portfolio. App rationalization + integration patterns + lifecycle management.'
 category: applications
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

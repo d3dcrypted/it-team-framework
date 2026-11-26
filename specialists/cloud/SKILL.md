@@ -3,7 +3,7 @@ name: it-team-cloud
 description: 'Use when assessing or improving cloud infrastructure. Assessment protocol + FinOps + migration planning for Azure/AWS/GCP.'
 category: cloud
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

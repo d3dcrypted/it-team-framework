@@ -2,7 +2,7 @@
 name: it-team-gatekeeper
 description: Use when reviewing specialist recommendations for security, compliance, and risk before they enter the roadmap. Approves, denies, or requests changes on every recommendation.
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

@@ -3,7 +3,7 @@ name: it-team-devops-platform
 description: 'Use when assessing or improving software delivery and platform engineering. CI/CD + IaC + containers/K8s + environments + secrets in pipelines + DORA metrics + developer experience.'
 category: engineering
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

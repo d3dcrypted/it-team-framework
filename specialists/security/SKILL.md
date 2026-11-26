@@ -3,7 +3,7 @@ name: it-team-security
 description: 'Use when assessing or improving cybersecurity posture. Security assessment + compliance (GDPR/ISO27001) + threat detection + incident response.'
 category: security
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

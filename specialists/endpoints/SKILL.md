@@ -3,7 +3,7 @@ name: it-team-endpoints
 description: 'Use when assessing or improving endpoint and device management. Workstation/mobile MDM + SOE + hardware lifecycle + VDI.'
 category: endpoints
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

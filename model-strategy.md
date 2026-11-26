@@ -33,4 +33,4 @@
 - Use `ponytail` style – keep changes to a one‑line diff when possible.
 - All workers must call `hermes-model-wrapper.sh` to ensure logging.
 
-*Generated on $(date) for user d3d.*
+*Last reviewed on 2026-09-29.*

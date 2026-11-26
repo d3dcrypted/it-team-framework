@@ -2,7 +2,7 @@
 name: it-team-interview-guide
 description: Use when conducting the initial IT department assessment interview. Structured questions for all 13 domains to build a complete AS-IS picture.
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

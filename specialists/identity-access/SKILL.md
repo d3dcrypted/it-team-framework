@@ -3,7 +3,7 @@ name: it-team-identity-access
 description: 'Use when assessing or improving identity and access management. Directory services + MFA/passwordless + PAM + identity lifecycle (JML) + SSO/federation + identity governance.'
 category: security
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

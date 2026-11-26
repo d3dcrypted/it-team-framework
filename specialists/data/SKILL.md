@@ -3,7 +3,7 @@ name: it-team-data
 description: 'Use when assessing or improving data infrastructure. Storage + backup/DR (3-2-1) + data governance + analytics.'
 category: data-infrastructure
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:

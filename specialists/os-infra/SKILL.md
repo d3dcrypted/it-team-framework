@@ -3,7 +3,7 @@ name: it-team-os-infra
 description: 'Use when assessing or improving OS, server, virtualization, and identity infrastructure. Assessment protocol + improvement catalog for OS/AD/hypervisor.'
 category: infrastructure
 version: 0.3.0
-author: d3d
+author: Hermes Agent
 license: MIT
 metadata:
   hermes:
