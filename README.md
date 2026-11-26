@@ -1,10 +1,10 @@
 # IT Team Framework
 
-Multi-agent framework for corporate IT departments. A complete IT team as a set of specialized AI agents, orchestrated by an artificial CTO/IT Manager. v0.3: 13 domain specialists, a security gatekeeper (pre-execution risk review), and an independent technical validator (evidence-based post-execution verification) — sized for medium-to-large organizations.
+Multi-agent framework for corporate IT departments: a full IT team as specialized AI agents, run by an artificial CTO/IT Manager. v0.3 has 13 domain specialists, a security gatekeeper that reviews risk before execution, and an independent validator that checks the result against evidence. Sized for medium-to-large organizations.
 
 ## Philosophy
 
-An IT department is not just technical skills — it is assessment, planning, execution, and continuous improvement. This framework translates each IT role into a skilled Hermes agent, capable of:
+IT work is assessment, planning, execution and follow-through, not technical skill alone. The framework turns each IT role into a Hermes agent that can:
 
 1. **Assessing** the current state (assessment)
 2. **Planning** improvements (gap analysis + roadmap)
@@ -165,6 +165,10 @@ uvicorn server:app --host 127.0.0.1 --port 8080   # from api/
 Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/execute`, `GET /health`.
 
 The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`; in `demo` mode it is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
+
+## Authorship
+
+Human thought, machine hand. The author set the direction, took the decisions and reviewed the result; an AI assistant produced the drafting, the code and the prose in this file. Mistakes are the author's.
 
 ## Contributing
 

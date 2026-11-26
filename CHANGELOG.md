@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.4] - 2026-11-26
+
+### Changed
+
+- **README rewritten in plain prose, authorship documented.** The dash-heavy opener and the "not just technical skills" line are gone, and a `## Authorship` section states the split plainly: the direction and the review are the author's, the drafting is an AI assistant's. Documentation only, no behaviour change.
+
 ## [0.3.3] - 2026-11-26
 
 ### Changed
