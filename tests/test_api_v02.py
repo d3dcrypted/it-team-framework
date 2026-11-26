@@ -35,6 +35,8 @@ def test_demo_lifecycle_and_gate_decisions(api):
 
         gate = client.post(f"/engagements/{engagement_id}/gate-review")
         assert gate.status_code == 202
+        # v0.4.0: the gate stays open until it is closed explicitly.
+        assert client.get(f"/engagements/{engagement_id}").json()["status"] == "gate_review"
         recommendations = client.get(f"/engagements/{engagement_id}/recommendations").json()
         assert len(recommendations) == 3
 
@@ -49,6 +51,10 @@ def test_demo_lifecycle_and_gate_decisions(api):
                 json={"decision": "APPROVED"},
             )
             assert response.status_code == 200
+
+        gate_close = client.post(f"/engagements/{engagement_id}/gate-review/close")
+        assert gate_close.status_code == 200
+        assert client.get(f"/engagements/{engagement_id}").json()["status"] == "roadmap_ready"
 
         roadmap = client.get(f"/engagements/{engagement_id}/roadmap").json()["roadmap"]
         assert len(roadmap) == 3
@@ -69,9 +75,30 @@ def test_demo_lifecycle_and_gate_decisions(api):
                 "verdict": "VALIDATED",
                 "validator_agent": "it-team-validator",
                 "executor_agent": "it-team-validator",
+                "evidence_ref": "synthetic-evidence",
             },
         )
         assert self_validation.status_code == 409
+
+        missing_evidence = client.post(
+            f"/engagements/{engagement_id}/validator-verdict",
+            json={
+                "verdict": "VALIDATED",
+                "validator_agent": "it-team-validator",
+                "executor_agent": "it-team-orchestrator",
+            },
+        )
+        assert missing_evidence.status_code == 409
+
+        missing_executor = client.post(
+            f"/engagements/{engagement_id}/validator-verdict",
+            json={
+                "verdict": "VALIDATED",
+                "validator_agent": "it-team-validator",
+                "evidence_ref": "synthetic-evidence",
+            },
+        )
+        assert missing_executor.status_code == 422
 
         verdict = client.post(
             f"/engagements/{engagement_id}/validator-verdict",
@@ -117,7 +144,123 @@ def test_unknown_engagement_returns_404(api):
         assert client.get("/engagements/999/recommendations").status_code == 404
         assert client.get("/engagements/999/roadmap").status_code == 404
         assert client.post("/engagements/999/gate-review").status_code == 404
+        assert client.post("/engagements/999/gate-review/close").status_code == 404
         assert client.post("/engagements/999/execute").status_code == 404
+        assert client.get("/engagements/999/actions").status_code == 404
+
+
+def _drive_to_executing(client):
+    """Walk one engagement through the whole lifecycle up to `executing`."""
+    engagement_id = client.post("/engagements", json={"description": "Test"}).json()["id"]
+    assert client.post(f"/engagements/{engagement_id}/assess").status_code == 202
+    assert client.post(f"/engagements/{engagement_id}/gate-review").status_code == 202
+    for recommendation in client.get(f"/engagements/{engagement_id}/recommendations").json():
+        assert client.post(
+            f"/engagements/{engagement_id}/gate-review/{recommendation['id']}/decision",
+            json={"decision": "APPROVED"},
+        ).status_code == 200
+    assert client.post(f"/engagements/{engagement_id}/gate-review/close").status_code == 200
+    assert client.post(f"/engagements/{engagement_id}/execute").status_code == 202
+    return engagement_id
+
+
+def test_gate_review_can_fail(api):
+    """The gate is a step, not a formality: v0.3.4 closed it in the same call."""
+    from fastapi.testclient import TestClient
+
+    with TestClient(api.app) as client:
+        engagement_id = client.post("/engagements", json={"description": "Test"}).json()["id"]
+        client.post(f"/engagements/{engagement_id}/assess")
+        client.post(f"/engagements/{engagement_id}/gate-review")
+        assert client.get(f"/engagements/{engagement_id}").json()["status"] == "gate_review"
+
+        # An undecided recommendation holds the gate open.
+        assert client.post(f"/engagements/{engagement_id}/gate-review/close").status_code == 409
+
+        recommendations = client.get(f"/engagements/{engagement_id}/recommendations").json()
+        for recommendation in recommendations:
+            client.post(
+                f"/engagements/{engagement_id}/gate-review/{recommendation['id']}/decision",
+                json={"decision": "DENIED", "reason": "Not justified by the evidence"},
+            )
+        rejected = client.post(f"/engagements/{engagement_id}/gate-review/close")
+        assert rejected.status_code == 409
+        assert "rejected" in rejected.json()["detail"]
+        # No approved recommendation means no roadmap and no execution.
+        assert client.get(f"/engagements/{engagement_id}").json()["status"] == "gate_review"
+        assert client.post(f"/engagements/{engagement_id}/execute").status_code == 409
+
+        # One approval is enough to pass, and the decision is audited as the gatekeeper's.
+        client.post(
+            f"/engagements/{engagement_id}/gate-review/{recommendations[0]['id']}/decision",
+            json={"decision": "APPROVED"},
+        )
+        assert client.post(f"/engagements/{engagement_id}/gate-review/close").json()["approved"] == 1
+        trail = client.get(f"/engagements/{engagement_id}/audit-trail").json()["audit_trail"]
+        assert trail[-1]["changed_by"] == "it-team-gatekeeper"
+
+
+def test_verdict_cannot_precede_execution(api):
+    from fastapi.testclient import TestClient
+
+    with TestClient(api.app) as client:
+        engagement_id = client.post("/engagements", json={"description": "Test"}).json()["id"]
+        premature = client.post(
+            f"/engagements/{engagement_id}/validator-verdict",
+            json={
+                "verdict": "VALIDATED",
+                "validator_agent": "it-team-validator",
+                "executor_agent": "it-team-orchestrator",
+                "evidence_ref": "synthetic-evidence",
+            },
+        )
+        assert premature.status_code == 409
+
+        executing = _drive_to_executing(client)
+        mismatch = client.post(
+            f"/engagements/{executing}/validator-verdict",
+            json={
+                "engagement_id": executing + 1,
+                "verdict": "REJECTED",
+                "validator_agent": "it-team-validator",
+                "executor_agent": "it-team-orchestrator",
+            },
+        )
+        assert mismatch.status_code == 409
+
+
+def test_action_dependencies_are_enforced(api):
+    from fastapi.testclient import TestClient
+
+    with TestClient(api.app) as client:
+        engagement_id = _drive_to_executing(client)
+        endpoint = f"/engagements/{engagement_id}/dependencies"
+
+        assert client.post(endpoint, json=[{"action_id": "mfa", "depends_on": ["ghost"]}]).status_code == 422
+        assert client.post(endpoint, json=[{"action_id": "mfa", "depends_on": ["mfa"]}]).status_code == 422
+        assert client.post(endpoint, json=[
+            {"action_id": "a", "depends_on": ["b"]},
+            {"action_id": "b", "depends_on": ["a"]},
+        ]).status_code == 422
+
+        graph = client.post(endpoint, json=[
+            {"action_id": "ad-connect", "depends_on": []},
+            {"action_id": "mfa", "depends_on": ["ad-connect"]},
+        ])
+        assert graph.status_code == 200
+        assert client.get(f"/engagements/{engagement_id}/actions").json()["actions"][1]["blocked_by"] == ["ad-connect"]
+
+        blocked = client.post(f"/engagements/{engagement_id}/actions/mfa/start")
+        assert blocked.status_code == 409
+        assert "ad-connect" in blocked.json()["detail"]
+        assert client.post(f"/engagements/{engagement_id}/actions/unknown/start").status_code == 404
+
+        assert client.post(f"/engagements/{engagement_id}/actions/ad-connect/start").status_code == 200
+        # Completing an action that never ran is not a thing.
+        assert client.post(f"/engagements/{engagement_id}/actions/ad-connect/complete").status_code == 200
+        assert client.post(f"/engagements/{engagement_id}/actions/ad-connect/complete").status_code == 409
+        assert client.post(f"/engagements/{engagement_id}/actions/mfa/start").status_code == 200
+        assert client.get(f"/engagements/{engagement_id}/actions").json()["actions"][1]["blocked_by"] == []
 
 
 def test_health_is_available(api):

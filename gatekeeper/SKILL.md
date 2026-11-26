@@ -28,7 +28,7 @@ This skill adheres to the framework's common contract defined in `orchestrator/S
 
 ## When to Use
 
-- **Gate Review**: after Phase 1 (Assessment), before Gap Analysis
+- **Gate Review**: after Phase 1 (Assessment), before Gap Analysis. (v0.4.0) The gate is a step of its own: it opens in `gate_review` and moves to `roadmap_ready` only when every recommendation carries a decision and at least one is approved.
 - **Targeted review**: evaluate a single roadmap action before execution
 - **Compliance audit**: verify that a plan complies with GDPR/NIS2/ISO 27001
 

@@ -1,17 +1,27 @@
+# Per-user unit: works as-is, runs as the installing user over loopback.
+#   mkdir -p ~/.config/systemd/user
+#   cp api/it-team-api.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now it-team-api
+#
+# There is no User= here and no %i: %i resolves only for template units
+# (it-team-api@<instance>.service), and a plain unit that uses it is rejected
+# by systemd with "Invalid user/group name or numeric ID".
+# For a system-wide deployment (dedicated user, /srv layout, /etc environment
+# file) use the concrete example in docs/deployment-architecture.md, section 6.
 [Unit]
 Description=IT Team Framework API
 After=network.target
 
 [Service]
 Type=simple
-User=%i
 WorkingDirectory=%h/it-team-framework/api
 Environment=IT_TEAM_MODE=production
-# Provide IT_TEAM_API_KEY and optionally IT_TEAM_DB_PATH through an EnvironmentFile
-# stored outside the repository, for example: %h/.config/it-team-framework/api.env
+# production mode refuses to start without IT_TEAM_API_KEY, by design.
+# Create the file with 0600 permissions and uncomment the line:
 # EnvironmentFile=%h/.config/it-team-framework/api.env
-ExecStart=/usr/bin/python3 -m uvicorn server:app --host 127.0.0.1 --port 8080
+# Adapt the interpreter if the virtual environment lives elsewhere.
+ExecStart=%h/it-team-framework/.venv/bin/python -m uvicorn server:app --host 127.0.0.1 --port 8080
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

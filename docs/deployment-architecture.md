@@ -174,11 +174,11 @@ Do not copy this file into the repository.
 
 ## 6. Systemd placement and service configuration
 
-The supplied `api/it-team-api.service` is a template. Review and adapt `User`, `WorkingDirectory`, the virtual-environment Python path, and `EnvironmentFile` before enabling it.
+The supplied `api/it-team-api.service` is a user unit that works as installed: it starts the API with the repository virtual environment, over loopback, as the installing user. Install it with `cp` into `~/.config/systemd/user/`, then `systemctl --user daemon-reload && systemctl --user enable --now it-team-api`.
 
-Important: the supplied unit uses `%i`, which is meaningful for an instantiated unit such as `it-team-api@it-team.service`. If you install it as the non-instantiated `it-team-api.service`, replace `%i` with the dedicated service user and configure the environment file explicitly. Do not enable the unmodified template in production.
+It contains no `User=` and no `%i`: `%i` resolves only for template units such as `it-team-api@it-team.service`, and systemd rejects a plain unit that uses it with `Invalid user/group name or numeric ID`.
 
-A concrete deployment should use a normal service unit, for example:
+A concrete system-wide deployment uses a normal service unit, for example:
 
 ```ini
 [Unit]
@@ -202,7 +202,8 @@ WantedBy=multi-user.target
 Install and validate it with:
 
 ```bash
-sudo install -m 0644 api/it-team-api.service /etc/systemd/system/it-team-api.service
+# the system-wide unit shown above, not the per-user file shipped in api/
+sudo install -m 0644 /path/to/it-team-api.service /etc/systemd/system/it-team-api.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now it-team-api.service
 sudo systemctl status it-team-api.service

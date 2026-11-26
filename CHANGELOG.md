@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0] - 2026-11-26
+
+### Fixed
+
+Everything below comes from an external review of the public repository (`api/server.py` was read line by line, and the behaviour below was reproduced against a running server).
+
+- **The gatekeeper review now blocks.** `POST /engagements/{id}/gate-review` called `set_status("gate_review")` and `set_status("roadmap_ready")` in the same request, so the review was never a state anything could fail. The gate is now opened and closed by two separate calls; the new `POST /engagements/{id}/gate-review/close` passes only when every recommendation has a decision and at least one is approved, and records the transition as `it-team-gatekeeper`.
+- **An all-rejected roadmap can no longer be executed.** `POST /engagements/{id}/execute` required only that no recommendation be undecided; three `DENIED` decisions satisfied that. It now also requires at least one approval.
+- **Self-validation can no longer be bypassed.** `executor_agent` was optional on `POST /engagements/{id}/validator-verdict`, and the independence check `validator_agent != executor_agent` was the only rule that consumed it: omitting the field skipped it. The field is required, and `engagement_id` in the body is rejected with 409 when it contradicts the path.
+- **A verdict can no longer precede execution.** Verdicts are accepted only while the engagement is `executing`, and a `VALIDATED` verdict must carry `evidence_ref`: a verdict without evidence is the assumption the validation gate exists to stop.
+- **Dependency rules are enforced, not described.** The graph was stored and never checked. It is now validated on write (unknown predecessors, self-dependencies and cycles are rejected with 422) and enforced at execution time: `POST /engagements/{id}/actions/{action_id}/start` answers 409 while any predecessor is not `COMPLETED`, `POST .../complete` requires the action to be `RUNNING`, and `GET /engagements/{id}/actions` reports each action's state and what blocks it.
+- **Concurrent state changes no longer overwrite each other.** `set_status` read the current state and then wrote unconditionally. It now compares and swaps (`UPDATE ... WHERE id = ? AND status = ?`), accepts the transition only if the row matched, and reuses the `TRANSITIONS` table instead of a separate validity set. Two racing requests cannot both succeed from the same state.
+- **Database connections are always closed.** Every `get_conn()`/`close()` pair left the connection open on the error paths that returned early or raised. A single `db()` context manager commits on success and closes in a `finally`, and replaces all of them, including `init_db()`.
+- **Demo mode is no longer silently unauthenticated.** Authentication was applied only when `MODE == "production"`, so a configured `IT_TEAM_API_KEY` was ignored in demo. A key that is set is now enforced in every mode; demo without a key stays open, loopback only, as `docs/configuration.md` states.
+- **The systemd unit is valid.** `User=%i` resolves only for template units; installed as a plain unit, systemd rejects the file with `Invalid user/group name or numeric ID`. The supplied file is now a user unit that verifies clean and runs as-is (`systemd-analyze --user verify` exits 0); `docs/deployment-architecture.md` keeps the system-wide example with a dedicated user.
+
+### Changed
+
+- `tests/test_api_v02.py` extended to cover the gate failure path, the verdict preconditions and the dependency enforcement: 4 tests → 7, still dependency-free and deterministic.
+
 ## [0.3.4] - 2026-11-26
 
 ### Changed

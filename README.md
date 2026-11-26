@@ -159,12 +159,14 @@ The model IDs shown in examples are replaceable seeds, not mandatory dependencie
 ```bash
 pip install fastapi uvicorn
 uvicorn server:app --host 127.0.0.1 --port 8080   # from api/
-# or as a daemon: cp api/it-team-api.service /etc/systemd/system/ && systemctl enable --now it-team-api
+# or as a user service: cp api/it-team-api.service ~/.config/systemd/user/ && systemctl --user enable --now it-team-api
 ```
 
-Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/execute`, `GET /health`.
+Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /engagements/{id}/recommendations`, `POST /engagements/{id}/gate-review`, `POST /engagements/{id}/gate-review/{rec_id}/decision`, `POST /engagements/{id}/gate-review/close`, `GET /engagements/{id}/roadmap`, `POST /engagements/{id}/dependencies`, `GET /engagements/{id}/actions`, `POST /engagements/{id}/actions/{action_id}/start`, `POST /engagements/{id}/actions/{action_id}/complete`, `POST /engagements/{id}/execute`, `POST /engagements/{id}/validator-verdict`, `POST /engagements/{id}/complete`, `GET /engagements/{id}/audit-trail`, `GET /health`.
 
-The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`; in `demo` mode it is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
+The gate review is a step, not a formality: opening it moves the engagement to `gate_review`, and `gate-review/close` moves it to `roadmap_ready` only if every recommendation has a decision and at least one is approved. Execution requires an approved recommendation, and an action cannot start while a predecessor is incomplete.
+
+The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`, and enforces it in any mode once it is set; `demo` without a key is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
 
 ## Authorship
 

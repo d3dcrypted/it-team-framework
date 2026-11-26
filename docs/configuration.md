@@ -4,7 +4,7 @@
 
 The API supports two modes:
 
-- `demo`: local development and tests. Authentication is not required. Do not expose this mode outside a trusted local environment.
+- `demo`: local development and tests. A configured `IT_TEAM_API_KEY` is still enforced; without one, no authentication is required. Do not expose this mode outside a trusted local environment.
 - `production`: requires `IT_TEAM_API_KEY`. Every endpoint except `/health` requires an HTTP Bearer token matching that key.
 
 The API binds to `127.0.0.1` in the supplied systemd template. Keep it on a private interface or place it behind a properly configured TLS reverse proxy. Do not expose the API directly to the public Internet.

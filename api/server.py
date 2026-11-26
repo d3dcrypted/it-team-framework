@@ -4,10 +4,11 @@ The API is intentionally demo-only: assessment and execution use synthetic
 data. Hermes integration must be implemented as a separate adapter.
 """
 
+import json
 import logging
 import os
 import sqlite3
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
@@ -70,7 +71,12 @@ def require_api_key(
 ):
     if request.url.path == "/health":
         return
-    if MODE == "production" and (not API_KEY or credentials is None or credentials.credentials != API_KEY):
+    if not API_KEY:
+        # Demo mode without a key is unauthenticated by design: loopback only,
+        # see docs/configuration.md. A key that IS configured is enforced in
+        # every mode; ignoring it in demo was a silent downgrade.
+        return
+    if credentials is None or credentials.credentials != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
 
@@ -95,8 +101,28 @@ def get_conn():
     return conn
 
 
-def init_db():
+@contextmanager
+def db():
+    """One connection per unit of work: commits on success, always closes.
+
+    Callers raise freely inside the block; the exception skips the commit and
+    the connection is closed either way, which is what the earlier
+    get_conn()/close() pairs did not do on the error paths.
+    """
     conn = get_conn()
+    try:
+        yield conn
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def init_db():
+    with db() as conn:
+        _init_db(conn)
+
+
+def _init_db(conn):
     cur = conn.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS engagements (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -146,6 +172,15 @@ def init_db():
         created_at TEXT NOT NULL,
         FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
     )""")
+    # v0.4.0 P1: per-action state, so BLOCKED is a fact and not a convention.
+    cur.execute("""CREATE TABLE IF NOT EXISTS action_states (
+        engagement_id INTEGER NOT NULL,
+        action_id TEXT NOT NULL,
+        state TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        PRIMARY KEY (engagement_id, action_id),
+        FOREIGN KEY (engagement_id) REFERENCES engagements(id) ON DELETE CASCADE
+    )""")
     cur.execute("""CREATE TABLE IF NOT EXISTS models (
         name TEXT PRIMARY KEY,
         cost_input_per_1m REAL NOT NULL,
@@ -158,8 +193,7 @@ def init_db():
             # operator's catalog. Do NOT pin explicit OpenRouter model IDs here.
             [("demo-orchestrator-model", 0.70, 0.70), ("demo-worker-model", 0.42, 0.42)],
         )
-    conn.commit()
-    conn.close()
+    # committed and closed by db()
 
 
 class EngagementCreate(BaseModel):
@@ -211,9 +245,8 @@ class ApproveBody(BaseModel):
 
 
 def get_engagement(eng_id: int):
-    conn = get_conn()
-    row = conn.execute("SELECT * FROM engagements WHERE id = ?", (eng_id,)).fetchone()
-    conn.close()
+    with db() as conn:
+        row = conn.execute("SELECT * FROM engagements WHERE id = ?", (eng_id,)).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Engagement not found")
     return row
@@ -222,45 +255,43 @@ def get_engagement(eng_id: int):
 def set_status(eng_id: int, new_status: str, changed_by: str = "system"):
     if new_status not in VALID_STATUSES:
         raise ValueError(f"Invalid status: {new_status}")
-    conn = get_conn()
-    row = conn.execute("SELECT status FROM engagements WHERE id = ?", (eng_id,)).fetchone()
-    if not row:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Engagement not found")
-    current = row["status"]
-    if new_status != current and new_status not in TRANSITIONS.get(current, set()):
-        conn.close()
-        raise HTTPException(status_code=409, detail=f"Invalid transition: {current} -> {new_status}")
-    if new_status == current:
-        conn.close()  # ponytail: idempotent no-op, no audit row for non-transitions
-        return
-    # v0.3.1 P1: append-only audit trail. Never UPDATE/DELETE these rows.
-    conn.execute(
-        "INSERT INTO state_transitions (engagement_id, from_state, to_state, changed_at, changed_by) VALUES (?,?,?,?,?)",
-        (eng_id, current, new_status, datetime.now(timezone.utc).isoformat(), changed_by),
-    )
-    conn.execute("UPDATE engagements SET status = ? WHERE id = ?", (new_status, eng_id))
-    conn.commit()
-    conn.close()
+    with db() as conn:
+        row = conn.execute("SELECT status FROM engagements WHERE id = ?", (eng_id,)).fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Engagement not found")
+        current = row["status"]
+        if new_status != current and new_status not in TRANSITIONS.get(current, set()):
+            raise HTTPException(status_code=409, detail=f"Invalid transition: {current} -> {new_status}")
+        if new_status == current:
+            return  # idempotent no-op, no audit row for non-transitions
+        # Compare-and-swap on the state we just read: two concurrent requests
+        # cannot both move the same engagement out of the same state.
+        updated = conn.execute(
+            "UPDATE engagements SET status = ? WHERE id = ? AND status = ?",
+            (new_status, eng_id, current),
+        ).rowcount
+        if updated != 1:
+            raise HTTPException(status_code=409, detail=f"Concurrent state change on engagement {eng_id}")
+        # v0.3.1 P1: append-only audit trail. Never UPDATE/DELETE these rows.
+        conn.execute(
+            "INSERT INTO state_transitions (engagement_id, from_state, to_state, changed_at, changed_by) VALUES (?,?,?,?,?)",
+            (eng_id, current, new_status, datetime.now(timezone.utc).isoformat(), changed_by),
+        )
 
 
 def add_demo_recommendations(eng_id: int):
-    conn = get_conn()
-    if conn.execute("SELECT COUNT(*) AS cnt FROM recommendations WHERE engagement_id = ?", (eng_id,)).fetchone()["cnt"]:
-        conn.close()
-        return
-    conn.executemany(
-        "INSERT INTO recommendations (engagement_id, text) VALUES (?, ?)",
-        [(eng_id, "Abilitare MFA sugli account privilegiati"),
-         (eng_id, "Eseguire un test di restore Veeam completo"),
-         (eng_id, "Segmentare rete server ed endpoint")],
-    )
-    conn.commit()
-    conn.close()
+    with db() as conn:
+        if conn.execute("SELECT COUNT(*) AS cnt FROM recommendations WHERE engagement_id = ?", (eng_id,)).fetchone()["cnt"]:
+            return
+        conn.executemany(
+            "INSERT INTO recommendations (engagement_id, text) VALUES (?, ?)",
+            [(eng_id, "Abilitare MFA sugli account privilegiati"),
+             (eng_id, "Eseguire un test di restore Veeam completo"),
+             (eng_id, "Segmentare rete server ed endpoint")],
+        )
 
 
 def recommendation_from_row(row):
-    import json
     return RecommendationOut(
         id=row["id"], text=row["text"],
         approved=bool(row["approved"]) if row["approved"] is not None else None,
@@ -273,12 +304,10 @@ def recommendation_from_row(row):
 @app.post("/engagements", response_model=EngagementOut)
 def create_engagement(payload: EngagementCreate):
     now = datetime.now(timezone.utc).isoformat()
-    conn = get_conn()
-    cur = conn.execute("INSERT INTO engagements (status, description, created_at) VALUES (?,?,?)",
-                       ("created", payload.description, now))
-    eng_id = cur.lastrowid
-    conn.commit()
-    conn.close()
+    with db() as conn:
+        cur = conn.execute("INSERT INTO engagements (status, description, created_at) VALUES (?,?,?)",
+                           ("created", payload.description, now))
+        eng_id = cur.lastrowid
     return EngagementOut(id=eng_id, status="created", description=payload.description, created_at=now)
 
 
@@ -322,13 +351,45 @@ def list_recommendations(eng_id: int):
 
 
 @app.post("/engagements/{eng_id}/gate-review", status_code=202)
-def start_gate_review(eng_id: int, background: BackgroundTasks):
+def start_gate_review(eng_id: int):
+    """Opens the gate. It stays open until close_gate_review() decides."""
     row = get_engagement(eng_id)
     if row["status"] != "assessed":
         raise HTTPException(status_code=409, detail="Gate review requires an assessed engagement")
     set_status(eng_id, "gate_review")
-    set_status(eng_id, "roadmap_ready")
-    return {"message": "Gate review started"}
+    return {"message": "Gate review open", "status": "gate_review"}
+
+
+@app.post("/engagements/{eng_id}/gate-review/close")
+def close_gate_review(eng_id: int):
+    """Closes the gate: the step the v0.3.4 API skipped.
+
+    It used to move assessed -> gate_review -> roadmap_ready inside one
+    request, so the review was never a state anyone could fail. The gate now
+    passes only when every recommendation has a decision and at least one was
+    approved; an all-rejected roadmap cannot reach execution.
+    """
+    row = get_engagement(eng_id)
+    if row["status"] != "gate_review":
+        raise HTTPException(status_code=409, detail="No gate review is currently open")
+    with db() as conn:
+        counts = conn.execute(
+            "SELECT COUNT(*) AS total,"
+            " SUM(CASE WHEN decision IS NULL THEN 1 ELSE 0 END) AS pending,"
+            " SUM(CASE WHEN decision IN (?,?) THEN 1 ELSE 0 END) AS approved,"
+            " SUM(CASE WHEN decision IN (?,?) THEN 1 ELSE 0 END) AS rejected"
+            " FROM recommendations WHERE engagement_id = ?",
+            (Decision.APPROVED.value, Decision.APPROVED_WITH_CONDITIONS.value,
+             Decision.DENIED.value, Decision.CHANGES_REQUESTED.value, eng_id),
+        ).fetchone()
+    if not counts["total"]:
+        raise HTTPException(status_code=409, detail="No recommendations to review")
+    if counts["pending"]:
+        raise HTTPException(status_code=409, detail=f"{counts['pending']} recommendation(s) still undecided")
+    if not counts["approved"]:
+        raise HTTPException(status_code=409, detail="Every recommendation was rejected: the gate cannot pass")
+    set_status(eng_id, "roadmap_ready", changed_by="it-team-gatekeeper")
+    return {"message": "Gate passed", "approved": counts["approved"], "rejected": counts["rejected"]}
 
 
 @app.post("/engagements/{eng_id}/gate-review/{rec_id}/decision", response_model=RecommendationOut)
@@ -336,19 +397,15 @@ def decide_recommendation(eng_id: int, rec_id: int, body: DecisionBody):
     row = get_engagement(eng_id)
     if row["status"] not in {"gate_review", "roadmap_ready"}:
         raise HTTPException(status_code=409, detail="Recommendation is not currently under gate review")
-    import json
-    conn = get_conn()
-    rec = conn.execute("SELECT * FROM recommendations WHERE id = ? AND engagement_id = ?", (rec_id, eng_id)).fetchone()
-    if not rec:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Recommendation not found for this engagement")
-    now = datetime.now(timezone.utc).isoformat()
-    conn.execute("UPDATE recommendations SET approved=?, decision=?, reason=?, conditions=?, reviewed_at=?, reviewed_by=? WHERE id=?",
-                 (1 if body.decision in {Decision.APPROVED, Decision.APPROVED_WITH_CONDITIONS} else 0,
-                  body.decision.value, body.reason, json.dumps(body.conditions), now, body.reviewed_by, rec_id))
-    conn.commit()
-    updated = conn.execute("SELECT * FROM recommendations WHERE id = ?", (rec_id,)).fetchone()
-    conn.close()
+    with db() as conn:
+        rec = conn.execute("SELECT id FROM recommendations WHERE id = ? AND engagement_id = ?", (rec_id, eng_id)).fetchone()
+        if not rec:
+            raise HTTPException(status_code=404, detail="Recommendation not found for this engagement")
+        now = datetime.now(timezone.utc).isoformat()
+        conn.execute("UPDATE recommendations SET approved=?, decision=?, reason=?, conditions=?, reviewed_at=?, reviewed_by=? WHERE id=?",
+                     (1 if body.decision in {Decision.APPROVED, Decision.APPROVED_WITH_CONDITIONS} else 0,
+                      body.decision.value, body.reason, json.dumps(body.conditions), now, body.reviewed_by, rec_id))
+        updated = conn.execute("SELECT * FROM recommendations WHERE id = ?", (rec_id,)).fetchone()
     return recommendation_from_row(updated)
 
 
@@ -373,11 +430,18 @@ def execute_improvement(eng_id: int, background: BackgroundTasks):
     row = get_engagement(eng_id)
     if row["status"] not in {"roadmap_ready", "approved"}:
         raise HTTPException(status_code=409, detail="Execution requires a reviewed roadmap")
-    conn = get_conn()
-    pending = conn.execute("SELECT COUNT(*) AS cnt FROM recommendations WHERE engagement_id=? AND decision IS NULL", (eng_id,)).fetchone()["cnt"]
-    conn.close()
-    if pending:
+    with db() as conn:
+        counts = conn.execute(
+            "SELECT SUM(CASE WHEN decision IS NULL THEN 1 ELSE 0 END) AS pending,"
+            " SUM(CASE WHEN decision IN (?,?) THEN 1 ELSE 0 END) AS approved"
+            " FROM recommendations WHERE engagement_id=?",
+            (Decision.APPROVED.value, Decision.APPROVED_WITH_CONDITIONS.value, eng_id),
+        ).fetchone()
+    if counts["pending"]:
         raise HTTPException(status_code=409, detail="Every recommendation must be reviewed before execution")
+    if not counts["approved"]:
+        # A roadmap where everything was rejected is not an execution plan.
+        raise HTTPException(status_code=409, detail="Execution requires at least one approved recommendation")
     set_status(eng_id, "approved")
     set_status(eng_id, "executing")
 
@@ -387,7 +451,7 @@ def execute_improvement(eng_id: int, background: BackgroundTasks):
                 raise RuntimeError("Hermes adapter not implemented")
             # v0.3.1 P1: no auto-COMPLETED. The orchestrator must record a
             # VALIDATED verdict from it-team-validator before completion.
-            set_status(eng_id, "executing")
+            logger.info("Demo execution running for engagement %s", eng_id)
         except Exception:
             logger.exception("Execution failed for engagement %s", eng_id)
             try:
@@ -401,10 +465,12 @@ def execute_improvement(eng_id: int, background: BackgroundTasks):
 
 class ValidatorVerdictBody(BaseModel):
     """Independent validator verdict — required before COMPLETED (v0.3.1 P1)."""
-    engagement_id: int
+    engagement_id: Optional[int] = None  # must match the path when supplied
     verdict: str  # VALIDATED | REJECTED | EVIDENCE_INSUFFICIENT
     validator_agent: str
-    executor_agent: Optional[str] = None
+    # Required since v0.4.0: while it was optional, omitting it bypassed the
+    # independence check entirely (validator != executor was never tested).
+    executor_agent: str
     evidence_ref: Optional[str] = None
 
 
@@ -416,81 +482,205 @@ class DependencyBody(BaseModel):
 
 @app.post("/engagements/{eng_id}/validator-verdict", status_code=201)
 def record_validator_verdict(eng_id: int, body: ValidatorVerdictBody):
-    get_engagement(eng_id)
+    row = get_engagement(eng_id)
+    if body.engagement_id is not None and body.engagement_id != eng_id:
+        raise HTTPException(status_code=409, detail="engagement_id in the body does not match the path")
     if body.verdict not in {"VALIDATED", "REJECTED", "EVIDENCE_INSUFFICIENT"}:
         raise HTTPException(status_code=422, detail="verdict must be VALIDATED|REJECTED|EVIDENCE_INSUFFICIENT")
+    # A verdict before execution is an assumption, not a verification.
+    if row["status"] != "executing":
+        raise HTTPException(status_code=409,
+                           detail=f"Verdicts apply to an executing engagement, currently '{row['status']}'")
     if body.validator_agent == body.executor_agent:
         raise HTTPException(status_code=409, detail="Self-validation is void: validator_agent must differ from executor_agent")
-    conn = get_conn()
-    conn.execute(
-        "INSERT INTO validator_verdicts (engagement_id, verdict, validator_agent, executor_agent, evidence_ref, created_at) VALUES (?,?,?,?,?,?)",
-        (eng_id, body.verdict, body.validator_agent, body.executor_agent, body.evidence_ref,
-         datetime.now(timezone.utc).isoformat()),
-    )
-    conn.commit()
-    conn.close()
+    if body.verdict == "VALIDATED" and not body.evidence_ref:
+        raise HTTPException(status_code=409, detail="A VALIDATED verdict requires evidence_ref")
+    with db() as conn:
+        conn.execute(
+            "INSERT INTO validator_verdicts (engagement_id, verdict, validator_agent, executor_agent, evidence_ref, created_at) VALUES (?,?,?,?,?,?)",
+            (eng_id, body.verdict, body.validator_agent, body.executor_agent, body.evidence_ref,
+             datetime.now(timezone.utc).isoformat()),
+        )
     return {"message": "Verdict recorded", "verdict": body.verdict}
+
+
+def find_cycle(edges: dict) -> List[str]:
+    """Return one dependency cycle as a closed path, or [] when acyclic.
+
+    ponytail: recursive DFS — roadmaps are tens of actions, not thousands.
+    """
+    UNVISITED, VISITING, DONE = 0, 1, 2
+    seen: dict = {}
+    stack: List[str] = []
+
+    def visit(node: str) -> List[str]:
+        if seen.get(node) == VISITING:
+            return stack[stack.index(node):] + [node]
+        if seen.get(node) == DONE:
+            return []
+        seen[node] = VISITING
+        stack.append(node)
+        for predecessor in sorted(edges.get(node, ())):
+            cycle = visit(predecessor)
+            if cycle:
+                return cycle
+        stack.pop()
+        seen[node] = DONE
+        return []
+
+    for node in sorted(edges):
+        cycle = visit(node)
+        if cycle:
+            return cycle
+    return []
 
 
 @app.post("/engagements/{eng_id}/dependencies")
 def set_dependencies(eng_id: int, body: List[DependencyBody]):
+    """Record the action graph and reject the graphs the orchestrator would abort on.
+
+    v0.3.1 declared 'an action cannot start until its predecessors COMPLETED'
+    and left the check to the prompt. The graph is now validated on write
+    (unknown predecessors, self-loops, cycles) and enforced when an action
+    starts, through the action_states table.
+    """
     get_engagement(eng_id)
-    conn = get_conn()
-    conn.execute("DELETE FROM action_dependencies WHERE engagement_id = ?", (eng_id,))
+    declared = [dep.action_id for dep in body]
+    if any(not action.strip() for action in declared):
+        raise HTTPException(status_code=422, detail="action_id must not be empty")
+    if len(set(declared)) != len(declared):
+        raise HTTPException(status_code=422, detail="Duplicate action_id in the dependency payload")
+    edges: dict = {}
     for dep in body:
-        for pred in dep.depends_on:
-            conn.execute(
-                "INSERT INTO action_dependencies (engagement_id, action_id, depends_on) VALUES (?,?,?)",
-                (eng_id, dep.action_id, pred),
-            )
-    conn.commit()
-    conn.close()
-    return {"message": "Dependencies recorded", "count": sum(len(d.depends_on) for d in body)}
+        for predecessor in dep.depends_on:
+            if predecessor not in declared:
+                raise HTTPException(status_code=422,
+                                    detail=f"Unknown predecessor '{predecessor}': declare it as an action first")
+            if predecessor == dep.action_id:
+                raise HTTPException(status_code=422, detail=f"Action '{predecessor}' cannot depend on itself")
+            edges.setdefault(dep.action_id, set()).add(predecessor)
+    cycle = find_cycle(edges)
+    if cycle:
+        raise HTTPException(status_code=422, detail="Dependency cycle: " + " -> ".join(cycle))
+    now = datetime.now(timezone.utc).isoformat()
+    with db() as conn:
+        conn.execute("DELETE FROM action_dependencies WHERE engagement_id = ?", (eng_id,))
+        for action_id, predecessors in edges.items():
+            for predecessor in sorted(predecessors):
+                conn.execute(
+                    "INSERT INTO action_dependencies (engagement_id, action_id, depends_on) VALUES (?,?,?)",
+                    (eng_id, action_id, predecessor),
+                )
+        # INSERT OR IGNORE: re-declaring the graph never resets a completed action.
+        conn.executemany(
+            "INSERT OR IGNORE INTO action_states (engagement_id, action_id, state, updated_at) VALUES (?,?,?,?)",
+            [(eng_id, action_id, "PENDING", now) for action_id in declared],
+        )
+    return {"message": "Dependencies recorded", "actions": len(declared),
+            "count": sum(len(d.depends_on) for d in body)}
+
+
+def action_state(conn, eng_id: int, action_id: str) -> str:
+    row = conn.execute(
+        "SELECT state FROM action_states WHERE engagement_id = ? AND action_id = ?", (eng_id, action_id)
+    ).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail=f"Action '{action_id}' is not declared for this engagement")
+    return row["state"]
+
+
+@app.get("/engagements/{eng_id}/actions")
+def list_actions(eng_id: int):
+    get_engagement(eng_id)
+    with db() as conn:
+        states = {r["action_id"]: r["state"] for r in
+                  conn.execute("SELECT action_id, state FROM action_states WHERE engagement_id = ?", (eng_id,))}
+        dependencies = conn.execute(
+            "SELECT action_id, depends_on FROM action_dependencies WHERE engagement_id = ?", (eng_id,)
+        ).fetchall()
+    blocked: dict = {}
+    for dep in dependencies:
+        if states.get(dep["depends_on"]) != "COMPLETED":
+            blocked.setdefault(dep["action_id"], []).append(dep["depends_on"])
+    return {"actions": [{"action_id": action_id, "state": state, "blocked_by": sorted(blocked.get(action_id, []))}
+                        for action_id, state in sorted(states.items())]}
+
+
+@app.post("/engagements/{eng_id}/actions/{action_id}/start")
+def start_action(eng_id: int, action_id: str):
+    """A blocked action cannot start: the rule the skills state, enforced here."""
+    get_engagement(eng_id)
+    with db() as conn:
+        state = action_state(conn, eng_id, action_id)
+        if state == "COMPLETED":
+            raise HTTPException(status_code=409, detail=f"Action '{action_id}' is already COMPLETED")
+        if state == "RUNNING":
+            raise HTTPException(status_code=409, detail=f"Action '{action_id}' is already RUNNING")
+        unmet = conn.execute(
+            "SELECT d.depends_on FROM action_dependencies d"
+            " LEFT JOIN action_states s ON s.engagement_id = d.engagement_id AND s.action_id = d.depends_on"
+            " WHERE d.engagement_id = ? AND d.action_id = ? AND COALESCE(s.state, 'PENDING') != 'COMPLETED'"
+            " ORDER BY d.depends_on",
+            (eng_id, action_id),
+        ).fetchall()
+        if unmet:
+            raise HTTPException(status_code=409, detail="Blocked by "
+                                + ", ".join(r["depends_on"] for r in unmet))
+        conn.execute("UPDATE action_states SET state = 'RUNNING', updated_at = ? WHERE engagement_id = ? AND action_id = ?",
+                     (datetime.now(timezone.utc).isoformat(), eng_id, action_id))
+    return {"action_id": action_id, "state": "RUNNING"}
+
+
+@app.post("/engagements/{eng_id}/actions/{action_id}/complete")
+def complete_action(eng_id: int, action_id: str):
+    get_engagement(eng_id)
+    with db() as conn:
+        state = action_state(conn, eng_id, action_id)
+        if state != "RUNNING":
+            raise HTTPException(status_code=409, detail=f"Action '{action_id}' is {state}: only a RUNNING action can complete")
+        conn.execute("UPDATE action_states SET state = 'COMPLETED', updated_at = ? WHERE engagement_id = ? AND action_id = ?",
+                     (datetime.now(timezone.utc).isoformat(), eng_id, action_id))
+    return {"action_id": action_id, "state": "COMPLETED"}
 
 
 @app.post("/engagements/{eng_id}/complete", status_code=200)
 def complete_engagement(eng_id: int):
     """v0.3.1 P1: COMPLETED reachable ONLY from a VALIDATED verdict."""
     get_engagement(eng_id)
-    conn = get_conn()
-    verdict = conn.execute(
-        "SELECT verdict FROM validator_verdicts WHERE engagement_id = ? ORDER BY id DESC LIMIT 1",
-        (eng_id,),
-    ).fetchone()
+    with db() as conn:
+        verdict = conn.execute(
+            "SELECT verdict FROM validator_verdicts WHERE engagement_id = ? ORDER BY id DESC LIMIT 1",
+            (eng_id,),
+        ).fetchone()
     if not verdict or verdict["verdict"] != "VALIDATED":
-        conn.close()
         raise HTTPException(status_code=409, detail="COMPLETED requires a VALIDATED verdict from it-team-validator")
     set_status(eng_id, "completed", changed_by="it-team-validator")
-    conn.close()
     return {"message": "Engagement completed", "status": "completed"}
 
 
 @app.get("/engagements/{eng_id}/audit-trail")
 def get_audit_trail(eng_id: int):
     get_engagement(eng_id)
-    conn = get_conn()
-    rows = conn.execute(
-        "SELECT id, from_state, to_state, changed_at, changed_by FROM state_transitions WHERE engagement_id = ? ORDER BY id",
-        (eng_id,),
-    ).fetchall()
-    conn.close()
+    with db() as conn:
+        rows = conn.execute(
+            "SELECT id, from_state, to_state, changed_at, changed_by FROM state_transitions WHERE engagement_id = ? ORDER BY id",
+            (eng_id,),
+        ).fetchall()
     return {"audit_trail": [dict(r) for r in rows]}
 
 
 @app.get("/models", response_model=List[ModelOut])
 def list_models():
-    conn = get_conn()
-    rows = conn.execute("SELECT * FROM models ORDER BY name").fetchall()
-    conn.close()
+    with db() as conn:
+        rows = conn.execute("SELECT * FROM models ORDER BY name").fetchall()
     return [ModelOut(name=r["name"], cost_input_per_1m=r["cost_input_per_1m"], cost_output_per_1m=r["cost_output_per_1m"]) for r in rows]
 
 
 @app.get("/health")
 def health_check():
     try:
-        conn = get_conn()
-        conn.execute("SELECT 1")
-        conn.close()
+        with db() as conn:
+            conn.execute("SELECT 1")
         return {"status": "ok", "mode": MODE, "version": VERSION}
     except sqlite3.Error:
         return {"status": "degraded", "mode": MODE, "version": VERSION}
