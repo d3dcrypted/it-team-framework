@@ -1,6 +1,6 @@
 ---
 name: it-team-validator
-description: 'Use when verifying completed execution actions with evidence. Independent technical validation before any action is marked COMPLETED. Reviews evidence bundles, reproduces checks, issues VALIDATED / REJECTED / EVIDENCE_INSUFFICIENT verdicts.'
+description: Use when validating completed actions with evidence.
 version: 0.3.0
 author: Hermes Agent
 license: MIT

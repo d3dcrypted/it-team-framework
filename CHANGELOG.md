@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.3] - 2026-11-26
+
+### Changed
+
+- **All 17 skill descriptions compressed to ≤60 chars.** Frontmatter `description` was 113–242 chars, which bloated the skill index every session pays for. Each is now a `Use when <trigger>: <key content>.` line (113–242 → 48–60), same domains and tooling, no behaviour change. Edited in the repo (canonical), then `scripts/deploy-skills.sh` re-synced the installed copies.
+
 ## [0.3.2] - 2026-11-26
 
 ### Fixed

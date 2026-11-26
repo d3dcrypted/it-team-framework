@@ -1,6 +1,6 @@
 ---
 name: it-team-identity-access
-description: 'Use when assessing or improving identity and access management. Directory services + MFA/passwordless + PAM + identity lifecycle (JML) + SSO/federation + identity governance.'
+description: "Use when assessing IAM: MFA, PAM, JML, SSO, governance."
 category: security
 version: 0.3.0
 author: Hermes Agent

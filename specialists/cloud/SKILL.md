@@ -1,6 +1,6 @@
 ---
 name: it-team-cloud
-description: 'Use when assessing or improving cloud infrastructure. Assessment protocol + FinOps + migration planning for Azure/AWS/GCP.'
+description: "Use when assessing cloud: FinOps, migration, Azure/AWS/GCP."
 category: cloud
 version: 0.3.0
 author: Hermes Agent

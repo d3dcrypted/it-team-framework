@@ -1,6 +1,6 @@
 ---
 name: it-team-ai-automation
-description: 'Use when assessing or introducing AI adoption and process automation. Automation inventory + AI/LLM use cases + shadow AI + data readiness + AI governance (EU AI Act) + ROI-ranked automation backlog.'
+description: Use when assessing AI adoption and process automation.
 category: innovation
 version: 0.3.0
 author: Hermes Agent

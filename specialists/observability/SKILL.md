@@ -1,6 +1,6 @@
 ---
 name: it-team-observability
-description: 'Use when assessing or improving monitoring, logging, alerting, and SLOs. Metrics/logs/traces coverage + alert quality + dashboards + on-call + capacity trends.'
+description: Use when assessing monitoring, logging, alerting, SLOs.
 category: operations
 version: 0.3.0
 author: Hermes Agent

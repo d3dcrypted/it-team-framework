@@ -1,6 +1,6 @@
 ---
 name: it-team-orchestrator
-description: Use when planning, assessing, or transforming an entire IT department. Orchestrates 13 specialist agents plus a security gatekeeper and an independent validator through assessment-to-execution lifecycle.
+description: Use when running a whole-department IT assessment lifecycle.
 version: 0.3.0
 author: Hermes Agent
 license: MIT

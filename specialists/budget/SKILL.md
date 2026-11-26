@@ -1,6 +1,6 @@
 ---
 name: it-team-budget
-description: 'Use when assessing or improving IT budget, licensing, and procurement. Budget planning + vendor management + licensing optimization + TCO analysis.'
+description: Use when assessing IT budget, licensing, and procurement.
 category: budget-procurement
 version: 0.3.0
 author: Hermes Agent

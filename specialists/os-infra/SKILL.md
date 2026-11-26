@@ -1,6 +1,6 @@
 ---
 name: it-team-os-infra
-description: 'Use when assessing or improving OS, server, virtualization, and identity infrastructure. Assessment protocol + improvement catalog for OS/AD/hypervisor.'
+description: Use when assessing OS, server, hypervisor infra.
 category: infrastructure
 version: 0.3.0
 author: Hermes Agent

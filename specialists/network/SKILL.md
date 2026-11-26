@@ -1,6 +1,6 @@
 ---
 name: it-team-network
-description: 'Use when assessing or improving network infrastructure. LAN/WAN/VPN assessment + firewall rules + SD-WAN + network segmentation + monitoring.'
+description: Use when assessing LAN/WAN/VPN, firewall, segmentation.
 category: network
 version: 0.3.0
 author: Hermes Agent

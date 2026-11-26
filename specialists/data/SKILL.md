@@ -1,6 +1,6 @@
 ---
 name: it-team-data
-description: 'Use when assessing or improving data infrastructure. Storage + backup/DR (3-2-1) + data governance + analytics.'
+description: "Use when assessing data: storage, backup 3-2-1, governance."
 category: data-infrastructure
 version: 0.3.0
 author: Hermes Agent

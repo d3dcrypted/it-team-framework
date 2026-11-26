@@ -1,6 +1,6 @@
 ---
 name: it-team-service-desk
-description: 'Use when assessing or improving IT service desk operations. ITIL processes + ticketing + SLA management + knowledge base + user training.'
+description: "Use when assessing service desk: ITIL, SLA, ticketing."
 category: service-desk
 version: 0.3.0
 author: Hermes Agent

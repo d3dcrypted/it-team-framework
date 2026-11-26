@@ -1,6 +1,6 @@
 ---
 name: it-team-applications
-description: 'Use when assessing or improving enterprise applications portfolio. App rationalization + integration patterns + lifecycle management.'
+description: Use when assessing the enterprise applications portfolio.
 category: applications
 version: 0.3.0
 author: Hermes Agent

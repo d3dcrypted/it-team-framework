@@ -1,6 +1,6 @@
 ---
 name: it-team-security
-description: 'Use when assessing or improving cybersecurity posture. Security assessment + compliance (GDPR/ISO27001) + threat detection + incident response.'
+description: "Use when assessing security posture: GDPR, ISO27001, IR."
 category: security
 version: 0.3.0
 author: Hermes Agent

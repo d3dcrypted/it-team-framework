@@ -1,6 +1,6 @@
 ---
 name: it-team-endpoints
-description: 'Use when assessing or improving endpoint and device management. Workstation/mobile MDM + SOE + hardware lifecycle + VDI.'
+description: "Use when assessing endpoints: MDM, SOE, VDI, lifecycle."
 category: endpoints
 version: 0.3.0
 author: Hermes Agent
