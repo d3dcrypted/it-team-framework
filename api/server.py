@@ -2,6 +2,11 @@
 
 The API is intentionally demo-only: assessment and execution use synthetic
 data. Hermes integration must be implemented as a separate adapter.
+
+What it enforces is the order of the workflow. It does not verify who is
+calling: there is one shared API key, and reviewed_by, validator_agent and
+executor_agent are strings the caller supplies. "Validator differs from
+executor" is a consistency rule on those strings, not proof of independence.
 """
 
 import json
@@ -344,9 +349,8 @@ def start_assessment(eng_id: int, background: BackgroundTasks):
 @app.get("/engagements/{eng_id}/recommendations", response_model=List[RecommendationOut])
 def list_recommendations(eng_id: int):
     get_engagement(eng_id)
-    conn = get_conn()
-    rows = conn.execute("SELECT * FROM recommendations WHERE engagement_id = ? ORDER BY id", (eng_id,)).fetchall()
-    conn.close()
+    with db() as conn:
+        rows = conn.execute("SELECT * FROM recommendations WHERE engagement_id = ? ORDER BY id", (eng_id,)).fetchall()
     return [recommendation_from_row(row) for row in rows]
 
 
@@ -395,7 +399,9 @@ def close_gate_review(eng_id: int):
 @app.post("/engagements/{eng_id}/gate-review/{rec_id}/decision", response_model=RecommendationOut)
 def decide_recommendation(eng_id: int, rec_id: int, body: DecisionBody):
     row = get_engagement(eng_id)
-    if row["status"] not in {"gate_review", "roadmap_ready"}:
+    # Decisions are frozen once the gate closes: a roadmap that could still be
+    # edited in roadmap_ready was never the one the gate passed.
+    if row["status"] != "gate_review":
         raise HTTPException(status_code=409, detail="Recommendation is not currently under gate review")
     with db() as conn:
         rec = conn.execute("SELECT id FROM recommendations WHERE id = ? AND engagement_id = ?", (rec_id, eng_id)).fetchone()
@@ -418,10 +424,9 @@ def approve_recommendation(eng_id: int, rec_id: int, body: ApproveBody):
 @app.get("/engagements/{eng_id}/roadmap")
 def get_roadmap(eng_id: int):
     get_engagement(eng_id)
-    conn = get_conn()
-    rows = conn.execute("SELECT * FROM recommendations WHERE engagement_id = ? AND decision IN (?,?) ORDER BY id",
-                        (eng_id, Decision.APPROVED.value, Decision.APPROVED_WITH_CONDITIONS.value)).fetchall()
-    conn.close()
+    with db() as conn:
+        rows = conn.execute("SELECT * FROM recommendations WHERE engagement_id = ? AND decision IN (?,?) ORDER BY id",
+                            (eng_id, Decision.APPROVED.value, Decision.APPROVED_WITH_CONDITIONS.value)).fetchall()
     return {"roadmap": [recommendation_from_row(row).model_dump() for row in rows]}
 
 
@@ -493,7 +498,7 @@ def record_validator_verdict(eng_id: int, body: ValidatorVerdictBody):
                            detail=f"Verdicts apply to an executing engagement, currently '{row['status']}'")
     if body.validator_agent == body.executor_agent:
         raise HTTPException(status_code=409, detail="Self-validation is void: validator_agent must differ from executor_agent")
-    if body.verdict == "VALIDATED" and not body.evidence_ref:
+    if body.verdict == "VALIDATED" and not (body.evidence_ref or "").strip():
         raise HTTPException(status_code=409, detail="A VALIDATED verdict requires evidence_ref")
     with db() as conn:
         conn.execute(
@@ -609,7 +614,8 @@ def list_actions(eng_id: int):
 @app.post("/engagements/{eng_id}/actions/{action_id}/start")
 def start_action(eng_id: int, action_id: str):
     """A blocked action cannot start: the rule the skills state, enforced here."""
-    get_engagement(eng_id)
+    if get_engagement(eng_id)["status"] != "executing":
+        raise HTTPException(status_code=409, detail="Actions run only while the engagement is executing")
     with db() as conn:
         state = action_state(conn, eng_id, action_id)
         if state == "COMPLETED":
@@ -652,8 +658,13 @@ def complete_engagement(eng_id: int):
             "SELECT verdict FROM validator_verdicts WHERE engagement_id = ? ORDER BY id DESC LIMIT 1",
             (eng_id,),
         ).fetchone()
+        unfinished = [r["action_id"] for r in conn.execute(
+            "SELECT action_id FROM action_states WHERE engagement_id = ? AND state != 'COMPLETED' ORDER BY action_id",
+            (eng_id,))]
     if not verdict or verdict["verdict"] != "VALIDATED":
         raise HTTPException(status_code=409, detail="COMPLETED requires a VALIDATED verdict from it-team-validator")
+    if unfinished:
+        raise HTTPException(status_code=409, detail="Actions not completed: " + ", ".join(unfinished))
     set_status(eng_id, "completed", changed_by="it-team-validator")
     return {"message": "Engagement completed", "status": "completed"}
 

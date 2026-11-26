@@ -174,7 +174,7 @@ Do not copy this file into the repository.
 
 ## 6. Systemd placement and service configuration
 
-The supplied `api/it-team-api.service` is a user unit that works as installed: it starts the API with the repository virtual environment, over loopback, as the installing user. Install it with `cp` into `~/.config/systemd/user/`, then `systemctl --user daemon-reload && systemctl --user enable --now it-team-api`.
+The supplied `api/it-team-api.service` is a user unit: once `~/.config/it-team-framework/api.env` exists with `IT_TEAM_API_KEY`, it starts the API with the repository virtual environment, over loopback, as the installing user. Install it with `cp` into `~/.config/systemd/user/`, then `systemctl --user daemon-reload && systemctl --user enable --now it-team-api`.
 
 It contains no `User=` and no `%i`: `%i` resolves only for template units such as `it-team-api@it-team.service`, and systemd rejects a plain unit that uses it with `Invalid user/group name or numeric ID`.
 

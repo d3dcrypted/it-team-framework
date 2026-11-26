@@ -1,6 +1,6 @@
 # IT Team Framework
 
-Multi-agent framework for corporate IT departments: a full IT team as specialized AI agents, run by an artificial CTO/IT Manager. v0.3 has 13 domain specialists, a security gatekeeper that reviews risk before execution, and an independent validator that checks the result against evidence. Sized for medium-to-large organizations.
+Multi-agent framework for corporate IT departments: a full IT team as specialized AI agents, run by an artificial CTO/IT Manager. It has 13 domain specialists, a security gatekeeper that reviews risk before execution, and an independent validator that checks the result against evidence. Sized for medium-to-large organizations.
 
 ## Philosophy
 
@@ -166,7 +166,7 @@ Main endpoints: `POST /engagements`, `POST /engagements/{id}/assess`, `GET /enga
 
 The gate review is a step, not a formality: opening it moves the engagement to `gate_review`, and `gate-review/close` moves it to `roadmap_ready` only if every recommendation has a decision and at least one is approved. Execution requires an approved recommendation, and an action cannot start while a predecessor is incomplete.
 
-The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`, and enforces it in any mode once it is set; `demo` without a key is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
+The API is a demo of the workflow order, with synthetic recommendations: in `production` mode it authenticates, and assessment and execution fail because no Hermes adapter ships yet. It enforces the sequence of steps, not the identity of who performs them: there is one shared key, and reviewer, validator and executor names are caller-supplied strings. The API requires `IT_TEAM_API_KEY` when `IT_TEAM_MODE=production`, and enforces it in any mode once it is set; `demo` without a key is intended for local use only. Do not expose the API directly to the Internet: use a TLS reverse proxy, authentication, and a private network. The models in the initial database are demonstration seeds and should be replaced or updated based on the chosen provider.
 
 ## Authorship
 

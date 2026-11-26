@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.1] - 2026-11-26
+
+### Fixed
+
+Second pass on 0.4.0, probing the API instead of re-reading it. Each item was reproduced first.
+
+- **Gate decisions are frozen once the gate closes.** A decision could still be changed in `roadmap_ready`, so the roadmap that reached execution was not necessarily the one the gate passed. Decisions are accepted only in `gate_review`.
+- **An engagement cannot complete with unfinished actions.** `POST /engagements/{id}/complete` checked the verdict only; it returned 200 with one action `RUNNING` and one `PENDING`.
+- **Actions run only while the engagement is `executing`.** `actions/{id}/start` did not look at the engagement state.
+- **A blank `evidence_ref` is no evidence.** A single space satisfied the `VALIDATED` precondition.
+- **Two endpoints still leaked the connection on error.** `GET /recommendations` and `GET /roadmap` kept the `get_conn()`/`close()` pair that 0.4.0 said it had replaced everywhere.
+- **The systemd unit no longer claims to work as-is.** It ran in `production` with the environment file commented out, so it refused to start. The file is now referenced, and the comment says what `production` does without an adapter: it authenticates, and assessment fails.
+
+### Documented
+
+- The API enforces workflow order, not identity. One shared key; `reviewed_by`, `validator_agent` and `executor_agent` are caller-supplied. Stated in the README and the module docstring.
+
 ## [0.4.0] - 2026-11-26
 
 ### Fixed

@@ -112,6 +112,18 @@ def test_demo_lifecycle_and_gate_decisions(api):
         )
         assert verdict.status_code == 201
 
+        # Decisions are frozen after the gate closed.
+        assert client.post(
+            f"/engagements/{engagement_id}/gate-review/{recommendations[0]['id']}/decision",
+            json={"decision": "DENIED", "reason": "late"},
+        ).status_code == 409
+
+        # A declared action that has not finished holds completion.
+        client.post(f"/engagements/{engagement_id}/dependencies", json=[{"action_id": "mfa"}])
+        assert client.post(f"/engagements/{engagement_id}/complete").status_code == 409
+        client.post(f"/engagements/{engagement_id}/actions/mfa/start")
+        client.post(f"/engagements/{engagement_id}/actions/mfa/complete")
+
         completed = client.post(f"/engagements/{engagement_id}/complete")
         assert completed.status_code == 200
         assert client.get(f"/engagements/{engagement_id}").json()["status"] == "completed"
@@ -216,7 +228,17 @@ def test_verdict_cannot_precede_execution(api):
         )
         assert premature.status_code == 409
 
+        # Actions cannot run before execution either.
+        client.post(f"/engagements/{engagement_id}/dependencies", json=[{"action_id": "a"}])
+        assert client.post(f"/engagements/{engagement_id}/actions/a/start").status_code == 409
+
         executing = _drive_to_executing(client)
+        blank_evidence = client.post(
+            f"/engagements/{executing}/validator-verdict",
+            json={"verdict": "VALIDATED", "validator_agent": "it-team-validator",
+                  "executor_agent": "it-team-orchestrator", "evidence_ref": "  "},
+        )
+        assert blank_evidence.status_code == 409
         mismatch = client.post(
             f"/engagements/{executing}/validator-verdict",
             json={

@@ -1,4 +1,5 @@
-# Per-user unit: works as-is, runs as the installing user over loopback.
+# Per-user unit: runs as the installing user over loopback. It starts only once
+# the environment file below exists and holds IT_TEAM_API_KEY.
 #   mkdir -p ~/.config/systemd/user
 #   cp api/it-team-api.service ~/.config/systemd/user/
 #   systemctl --user daemon-reload && systemctl --user enable --now it-team-api
@@ -16,9 +17,11 @@ After=network.target
 Type=simple
 WorkingDirectory=%h/it-team-framework/api
 Environment=IT_TEAM_MODE=production
-# production mode refuses to start without IT_TEAM_API_KEY, by design.
-# Create the file with 0600 permissions and uncomment the line:
-# EnvironmentFile=%h/.config/it-team-framework/api.env
+# production mode refuses to start without IT_TEAM_API_KEY, by design: create
+# this file with 0600 permissions first. production authenticates every call,
+# and assessment/execution fail until a Hermes adapter exists (none ships here);
+# set IT_TEAM_MODE=demo in the file to serve the synthetic workflow with the key enforced.
+EnvironmentFile=%h/.config/it-team-framework/api.env
 # Adapt the interpreter if the virtual environment lives elsewhere.
 ExecStart=%h/it-team-framework/.venv/bin/python -m uvicorn server:app --host 127.0.0.1 --port 8080
 Restart=on-failure
