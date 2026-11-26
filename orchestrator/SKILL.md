@@ -425,30 +425,17 @@ IT Maturity evaluation framework (0-10 per domain):
 ```yaml
 # ~/.hermes/config.yaml (model section)
 model:
-  # Use ONLY auto/* routing aliases — NEVER pin explicit provider model IDs.
-  # Pinning 'openai/gpt-5.6-luna' via provider: openrouter replicates the
-  # cost-leak incident (bills directly to OpenRouter, bypasses free routing).
-  default: auto/best-reasoning
-  decision: decision  # uses JevRouter alias
+  provider: openrouter
+  default: <orchestrator-model-id>         # strongest reasoning model you can afford
 
 delegation:
-  model: auto/best-coding                  # workers: routed, not pinned
+  provider: openrouter
+  model: <cheap-worker-model-id>           # workers: cheapest model that passes
   max_concurrent_children: 3               # cost guardrail: never raise above 3 on shared-CPU hosts
   max_iterations: 30                       # workers must converge; 50 was runaway budget
 ```
 
-> **Cost-leak rule (binding):** never set `provider: openrouter` with an explicit model ID in this framework. Route through `auto/*` aliases (OmniRoute / your free proxy). The orchestrator spawns 13+ concurrent delegates — one bad config repeats the original $55/day incident.
-
-**Active config (2026-09-29, OmniRoute down):**
-```yaml
-model:
-  default: deepseek/deepseek-v4-flash
-  decision: decision  # resolved via --provider openrouter
-
-delegation:
-  model: typesafe/jev-router              # JevRouter via OpenRouter
-```
-Revert to `auto/*` aliases when OmniRoute is back online.
+> **Cost-leak rule (binding):** the orchestrator spawns 13+ concurrent delegates, so the worker model sets the bill. Pin a cheap worker model explicitly, never let workers inherit the orchestrator model, and set a spend limit on the provider key. An expensive model pinned for workers caused a $55/day incident.
 
 ## Usage Example
 
@@ -495,7 +482,7 @@ Rule: if `engagement-state.md` already exists for the company, RESUME from its
 3. **Forgetting dependencies** — some actions block others (e.g., AD health before Azure AD Connect). Always map cross-dependencies.
 4. **Underestimating timelines** — multiply estimated effort by 1.5 for contingencies. Be honest with estimates.
 5. **Not requesting approval** — the roadmap must always be approved by the user before execution. Do not execute automatically.
-6. **Sensitive data in context** — company data flows through your configured LLM routing (OmniRoute / local proxy). Do not include passwords, secrets, or personal data in prompts.
+6. **Sensitive data in context** — company data flows through your configured LLM provider. Do not include passwords, secrets, or personal data in prompts.
 7. **Ignoring the rollback plan** — every execution must have a safe way to revert. Document it.
 8. **(v0.2) Non-canonical severity** — using `Critical` instead of `CRITICAL` breaks the contract. Only canonical uppercase values.
 9. **(v0.2) Incorrect domain naming** — calling the domain "IAM" or "Identity" instead of `Identity & Access`; "Storage" or "Backup" instead of `Data, Backup & DR`.
